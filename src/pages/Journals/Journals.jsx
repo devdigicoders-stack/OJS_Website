@@ -6,7 +6,6 @@ import {
   FaTags, FaFingerprint, FaFilePdf, FaEye, FaShareAlt, FaSearch, 
   FaFilter, FaThLarge, FaList
 } from 'react-icons/fa';
-import { departments } from '../../data/dummyData';
 
 const ScrollReveal = ({ children, delay = 0 }) => (
   <motion.div
@@ -23,6 +22,7 @@ const Journals = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeDept, setActiveDept] = useState('All');
+  const [dynamicDepartments, setDynamicDepartments] = useState([]);
   
   const [journalsList, setJournalsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -34,6 +34,9 @@ const Journals = () => {
         if (res.ok) {
           const data = await res.json();
           setJournalsList(data);
+          // Compute unique departments
+          const depts = Array.from(new Set(data.map(j => j.department))).filter(Boolean);
+          setDynamicDepartments(depts.map((d, i) => ({ id: i, name: d })));
         }
       } catch (error) {
         console.error('Error fetching journals:', error);
@@ -97,7 +100,7 @@ const Journals = () => {
                     >
                       All Departments
                     </button>
-                    {departments.map(dept => (
+                    {dynamicDepartments.map(dept => (
                       <button 
                         key={dept.id}
                         onClick={() => setActiveDept(dept.name)}
