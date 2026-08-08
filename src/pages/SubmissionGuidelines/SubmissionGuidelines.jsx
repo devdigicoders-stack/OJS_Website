@@ -240,7 +240,7 @@ const SubmissionGuidelines = () => {
             </div>
             <div className="relative z-10">
               <h2 className="text-3xl font-bold mb-10 text-center">Our Peer Review Process</h2>
-              <div className="flex flex-col md:flex-row gap-4 items-stretch justify-between">
+              <div className="flex flex-wrap justify-center gap-4">
                 {[
                   { icon: <FaSearch />, title: 'Initial Screening' },
                   { icon: <FaUserGraduate />, title: 'Reviewer Assignment' },
@@ -248,9 +248,9 @@ const SubmissionGuidelines = () => {
                   { icon: <FaFileAlt />, title: 'Author Revision' },
                   { icon: <FaCheckCircle />, title: 'Final Decision' },
                 ].map((step, i) => (
-                  <div key={i} className="flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center border border-white/20 hover:bg-white/20 transition-colors">
-                    <div className="text-3xl mb-4 text-accent">{step.icon}</div>
-                    <h4 className="font-bold text-sm">{step.title}</h4>
+                  <div key={i} className="w-[140px] sm:w-[160px] md:w-[180px] lg:flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 text-center border border-white/20 hover:bg-white/20 transition-colors flex flex-col items-center justify-center">
+                    <div className="text-3xl mb-3 sm:mb-4 text-accent">{step.icon}</div>
+                    <h4 className="font-bold text-xs sm:text-sm">{step.title}</h4>
                   </div>
                 ))}
               </div>
