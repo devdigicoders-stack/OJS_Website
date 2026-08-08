@@ -9,9 +9,10 @@ import 'swiper/css/effect-fade';
 
 import { useState, useEffect } from 'react';
 import { features, steps } from '../../data/dummyData';
-import { FaLaptopCode, FaCogs, FaStethoscope, FaChartLine, FaBookReader, FaBalanceScale, FaGavel, FaPalette, FaDownload, FaEye, FaArrowRight, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaUserCheck, FaLockOpen, FaLink, FaShippingFast, FaGlobe, FaShieldAlt, FaBook, FaFileAlt, FaChalkboardTeacher, FaUniversity } from 'react-icons/fa';
+import { FaLaptopCode, FaCogs, FaStethoscope, FaChartLine, FaBookReader, FaBalanceScale, FaGavel, FaPalette, FaDownload, FaEye, FaArrowRight, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaUserCheck, FaLockOpen, FaLink, FaShippingFast, FaGlobe, FaShieldAlt, FaBook, FaFileAlt, FaChalkboardTeacher, FaUniversity, FaUsers, FaNewspaper, FaPenAlt, FaAward, FaStar, FaCheckCircle, FaFlask, FaAtom } from 'react-icons/fa';
 
 const iconMap = {
+  // Domain icons (colored white for dark bg)
   FaLaptopCode: <FaLaptopCode size={28} className="text-white mb-2 drop-shadow-md" />,
   FaCogs: <FaCogs size={28} className="text-white mb-2 drop-shadow-md" />,
   FaChartLine: <FaChartLine size={28} className="text-white mb-2 drop-shadow-md" />,
@@ -20,16 +21,26 @@ const iconMap = {
   FaBalanceScale: <FaBalanceScale size={28} className="text-white mb-2 drop-shadow-md" />,
   FaGavel: <FaGavel size={28} className="text-white mb-2 drop-shadow-md" />,
   FaPalette: <FaPalette size={28} className="text-white mb-2 drop-shadow-md" />,
-  FaUserCheck: <FaUserCheck size={24} className="text-accent mb-2 group-hover:scale-125 transition-transform duration-300" />,
-  FaLockOpen: <FaLockOpen size={24} className="text-accent mb-2 group-hover:scale-125 transition-transform duration-300" />,
-  FaLink: <FaLink size={24} className="text-accent mb-2 group-hover:scale-125 transition-transform duration-300" />,
-  FaShippingFast: <FaShippingFast size={24} className="text-accent mb-2 group-hover:scale-125 transition-transform duration-300" />,
-  FaGlobe: <FaGlobe size={24} className="text-accent mb-2 group-hover:scale-125 transition-transform duration-300" />,
-  FaShieldAlt: <FaShieldAlt size={24} className="text-accent mb-2 group-hover:scale-125 transition-transform duration-300" />,
-  FaBook: <FaBook size={32} className="text-accent group-hover:rotate-12 transition-transform duration-300" />,
-  FaFileAlt: <FaFileAlt size={32} className="text-accent group-hover:-rotate-12 transition-transform duration-300" />,
-  FaChalkboardTeacher: <FaChalkboardTeacher size={32} className="text-accent group-hover:scale-110 transition-transform duration-300" />,
-  FaUniversity: <FaUniversity size={32} className="text-accent group-hover:scale-110 transition-transform duration-300" />
+  FaFlask: <FaFlask size={28} className="text-white mb-2 drop-shadow-md" />,
+  FaAtom: <FaAtom size={28} className="text-white mb-2 drop-shadow-md" />,
+  FaUniversity: <FaUniversity size={28} className="text-white mb-2 drop-shadow-md" />,
+  // Stat/feature icons (colored primary for light bg)
+  FaUserCheck: <FaUserCheck size={24} className="text-primary" />,
+  FaLockOpen: <FaLockOpen size={24} className="text-primary" />,
+  FaLink: <FaLink size={24} className="text-primary" />,
+  FaShippingFast: <FaShippingFast size={24} className="text-primary" />,
+  FaGlobe: <FaGlobe size={24} className="text-primary" />,
+  FaShieldAlt: <FaShieldAlt size={24} className="text-primary" />,
+  FaBook: <FaBook size={24} className="text-primary" />,
+  FaFileAlt: <FaFileAlt size={24} className="text-primary" />,
+  FaChalkboardTeacher: <FaChalkboardTeacher size={24} className="text-primary" />,
+  FaUsers: <FaUsers size={24} className="text-primary" />,
+  FaNewspaper: <FaNewspaper size={24} className="text-primary" />,
+  FaPenAlt: <FaPenAlt size={24} className="text-primary" />,
+  FaAward: <FaAward size={24} className="text-primary" />,
+  FaStar: <FaStar size={24} className="text-primary" />,
+  FaCheckCircle: <FaCheckCircle size={24} className="text-primary" />,
+  FaChartLine2: <FaChartLine size={24} className="text-primary" />,
 };
 
 // Variants for Staggered Animations
@@ -317,8 +328,8 @@ const Home = () => {
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="flex justify-center mb-2 relative z-10">
-                    <div className="p-3 bg-primary/5 rounded-full group-hover:bg-primary/10 transition-colors duration-300">
-                      {iconMap[stat.icon]}
+                    <div className="p-3 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors duration-300">
+                      {iconMap[stat.icon] || <FaStar size={24} className="text-primary" />}
                     </div>
                   </div>
                   <div className="text-2xl md:text-3xl font-extrabold text-primary mb-1 font-poppins relative z-10">{stat.value}</div>
