@@ -202,6 +202,7 @@ const Home = () => {
 
   const [stats, setStats] = useState([]);
   const [domains, setDomains] = useState([]);
+  const [heroData, setHeroData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [journals, setJournals] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -221,6 +222,7 @@ const Home = () => {
           const homeData = await homeRes.json();
           setStats(homeData.stats || []);
           setDomains(homeData.domains || []);
+          setHeroData(homeData.hero || null);
         }
 
         if (journalsRes.ok) {
@@ -249,27 +251,50 @@ const Home = () => {
     fetchHomeData();
   }, []);
 
+  const heroConfig = heroData || {
+    title: 'Journal of society, behaviour and institutions',
+    subtitle: 'A premium academic publishing platform dedicated to sharing high-impact knowledge globally through rigorous peer review.',
+    badge: 'Empowering Global Scientific Research',
+    primaryButtonText: 'Submit Manuscript',
+    primaryButtonLink: '/journals',
+    secondaryButtonText: 'Explore Publications',
+    secondaryButtonLink: '/journals',
+    backgroundType: 'video',
+    backgroundUrl: 'https://videos.pexels.com/video-files/3129957/3129957-uhd_3840_2160_25fps.mp4',
+    overlayOpacity: '70'
+  };
+
   return (
     <div className="w-full">
       {/* 3. Hero Banner with Parallax and 4K Video */}
       <section ref={heroRef} className="relative text-white h-[90vh] min-h-[500px] overflow-hidden flex items-center justify-center">
-        {/* HTML5 Video Background */}
+        {/* Background Media */}
         <motion.div
           className="absolute inset-0 w-full h-full"
           style={{ y: backgroundY }}
         >
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover scale-105"
-          >
-            <source src="https://videos.pexels.com/video-files/3129957/3129957-uhd_3840_2160_25fps.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="absolute inset-0 bg-primary/70 mix-blend-multiply backdrop-blur-[1px]"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-100"></div>
+          {heroConfig.backgroundType === 'image' ? (
+            <img 
+              src={heroConfig.backgroundUrl} 
+              alt="Hero Background" 
+              className="w-full h-full object-cover scale-105"
+            />
+          ) : (
+            <video
+              key={heroConfig.backgroundUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover scale-105"
+            >
+              <source src={heroConfig.backgroundUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          <div className="absolute inset-0 mix-blend-multiply" style={{ backgroundColor: `rgba(15, 118, 110, ${parseInt(heroConfig.overlayOpacity) / 100})` }}></div>
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-100"></div>
         </motion.div>
 
         <motion.div
@@ -282,23 +307,29 @@ const Home = () => {
             transition={{ duration: 1, type: "spring", bounce: 0.4 }}
             className="flex flex-col items-center"
           >
-            <div className="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-xs font-semibold mb-6 text-primary-100 uppercase tracking-widest shadow-lg">
-              Empowering Global Scientific Research
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold font-poppins leading-tight mb-4 text-white drop-shadow-2xl">
-              Journal of society, behaviour and institutions
+            {heroConfig.badge && (
+              <div className="inline-block py-1.5 px-4 rounded-full bg-black/40 border border-white/30 backdrop-blur-md text-[10px] md:text-xs font-bold mb-4 md:mb-6 text-white uppercase tracking-widest shadow-lg">
+                {heroConfig.badge}
+              </div>
+            )}
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold font-poppins leading-tight mb-4 text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
+              {heroConfig.title}
             </h1>
-            <p className="text-base md:text-xl text-gray-100 mb-8 max-w-2xl drop-shadow-md font-light">
-              A premium academic publishing platform dedicated to sharing high-impact knowledge globally through rigorous peer review.
+            <p className="text-sm md:text-lg lg:text-xl text-white mb-8 max-w-2xl drop-shadow-[0_3px_3px_rgba(0,0,0,0.9)] font-medium leading-relaxed">
+              {heroConfig.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-sm mx-auto">
-              <Link to="/journals" className="relative group overflow-hidden bg-accent text-white font-semibold py-3 px-6 rounded-lg text-center shadow-lg hover:shadow-accent/50 text-sm">
-                <span className="relative z-10">Submit Manuscript</span>
-                <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              </Link>
-              <Link to="/journals" className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 text-center shadow-lg text-sm">
-                Explore Publications
-              </Link>
+              {heroConfig.primaryButtonText && (
+                <Link to={heroConfig.primaryButtonLink} className="relative group overflow-hidden bg-accent text-white font-semibold py-3 px-6 rounded-lg text-center shadow-lg hover:shadow-accent/50 text-sm">
+                  <span className="relative z-10">{heroConfig.primaryButtonText}</span>
+                  <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </Link>
+              )}
+              {heroConfig.secondaryButtonText && (
+                <Link to={heroConfig.secondaryButtonLink} className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 text-center shadow-lg text-sm">
+                  {heroConfig.secondaryButtonText}
+                </Link>
+              )}
             </div>
           </motion.div>
         </motion.div>
