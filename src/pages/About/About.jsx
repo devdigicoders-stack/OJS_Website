@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -28,58 +28,78 @@ const ScrollReveal = ({ children, delay = 0, direction = "up", width = "100%" })
 };
 
 const About = () => {
-  // Local Data for Sections
-  const features = [
-    { title: 'Peer Reviewed', icon: <FaUsers /> },
-    { title: 'Open Access', icon: <FaGlobeAmericas /> },
-    { title: 'DOI Support', icon: <FaFileAlt /> },
-    { title: 'Fast Review Process', icon: <FaBolt /> },
-    { title: 'International Standards', icon: <FaAward /> },
-    { title: 'Easy Submission', icon: <FaBookOpen /> },
-    { title: 'Secure Publication', icon: <FaLock /> },
-    { title: 'Indexed Articles', icon: <FaCheckCircle /> }
-  ];
+  const [aboutData, setAboutData] = useState({
+    introduction: '<p>The Journal of society, behaviour and institutions is a premier international publishing house established with the core purpose of bridging the gap between rigorous academic research and real-world application.</p><p>We publish cutting-edge, peer-reviewed research across multiple disciplines including Technology, Medicine, Arts, and Sciences, providing a robust platform for researchers worldwide to share their innovative discoveries.</p>',
+    mission: ['Promote high-quality research', 'Provide a robust publication platform', 'Encourage global knowledge sharing'],
+    vision: ['Connect the global research community', 'Maintain international quality standards', 'Support innovation & academic excellence'],
+    objectives: ['Publish high-quality research', 'Promote Open Access research', 'Maintain strict publishing ethics'],
+    features: [
+      { title: 'Peer Reviewed', icon: 'FaUsers' },
+      { title: 'Open Access', icon: 'FaGlobeAmericas' },
+      { title: 'DOI Support', icon: 'FaFileAlt' },
+      { title: 'Fast Review Process', icon: 'FaBolt' },
+      { title: 'International Standards', icon: 'FaAward' },
+      { title: 'Easy Submission', icon: 'FaBookOpen' },
+      { title: 'Secure Publication', icon: 'FaLock' },
+      { title: 'Indexed Articles', icon: 'FaCheckCircle' }
+    ],
+    researchAreas: [
+      { name: 'Computer Science', icon: 'FaLaptopCode' },
+      { name: 'Engineering', icon: 'FaCogs' },
+      { name: 'Medical Science', icon: 'FaStethoscope' },
+      { name: 'Education', icon: 'FaUniversity' },
+      { name: 'Commerce', icon: 'FaChartLine' },
+      { name: 'Law', icon: 'FaGavel' },
+      { name: 'Arts', icon: 'FaPalette' },
+      { name: 'Agriculture', icon: 'FaSeedling' }
+    ],
+    team: [
+      { name: 'Dr. Sarah Jenkins', role: 'Editor-in-Chief', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop' },
+      { name: 'Prof. Michael Chen', role: 'Managing Editor', img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop' },
+      { name: 'Dr. Emily Carter', role: 'Associate Editor', img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop' },
+      { name: 'Dr. James Wilson', role: 'Editorial Member', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop' }
+    ],
+    processSteps: ["Submit Manuscript", "Editorial Screening", "Peer Review", "Revision", "Acceptance", "Publication"],
+    stats: [
+      { label: 'Published Journals', value: '150+' },
+      { label: 'Research Articles', value: '12,000+' },
+      { label: 'Authors', value: '8,500+' },
+      { label: 'Reviewers', value: '1,200+' },
+      { label: 'Departments', value: '25+' },
+      { label: 'Countries', value: '140+' }
+    ]
+  });
 
-  const areas = [
-    { name: 'Computer Science', icon: <FaLaptopCode /> },
-    { name: 'Engineering', icon: <FaCogs /> },
-    { name: 'Medical Science', icon: <FaStethoscope /> },
-    { name: 'Education', icon: <FaUniversity /> },
-    { name: 'Commerce', icon: <FaChartLine /> },
-    { name: 'Law', icon: <FaGavel /> },
-    { name: 'Arts', icon: <FaPalette /> },
-    { name: 'Agriculture', icon: <FaSeedling /> }
-  ];
-
-  const team = [
-    { name: 'Dr. Sarah Jenkins', role: 'Editor-in-Chief', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop' },
-    { name: 'Prof. Michael Chen', role: 'Managing Editor', img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop' },
-    { name: 'Dr. Emily Carter', role: 'Associate Editor', img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop' },
-    { name: 'Dr. James Wilson', role: 'Editorial Member', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop' },
-  ];
-
-  const processSteps = [
-    "Submit Manuscript", "Editorial Screening", "Peer Review", 
-    "Revision", "Acceptance", "Publication"
-  ];
-
-  const stats = [
-    { label: 'Published Journals', value: '150+' },
-    { label: 'Research Articles', value: '12,000+' },
-    { label: 'Authors', value: '8,500+' },
-    { label: 'Reviewers', value: '1,200+' },
-    { label: 'Departments', value: '25+' },
-    { label: 'Countries', value: '140+' },
-  ];
-
-  const faqs = [
-    { q: "How to submit a paper?", a: "You can submit your manuscript by creating an account and navigating to the 'Submit' section. Follow the author guidelines carefully before submission." },
-    { q: "Is publication free?", a: "We operate on an Open Access model. While reading is free, there is a nominal Article Processing Charge (APC) for accepted manuscripts to cover editorial costs." },
-    { q: "How long does review take?", a: "Our average time to first decision is 14 days, with the full double-blind peer review process taking approximately 4-6 weeks." },
-    { q: "Is DOI provided?", a: "Yes, every published article is assigned a unique Digital Object Identifier (DOI) via Crossref." }
-  ];
-
+  const [faqs, setFaqs] = useState([]);
   const [activeFaq, setActiveFaq] = useState(null);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/faqs/public`);
+        if (res.ok) {
+          const data = await res.json();
+          setFaqs(data);
+        }
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      }
+    };
+    const fetchAboutData = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/about-page/public`);
+        if (res.ok) {
+          const data = await res.json();
+          // Merge with default state to ensure we always have arrays even if db is empty
+          setAboutData(prev => ({ ...prev, ...data }));
+        }
+      } catch (error) {
+        console.error('Error fetching About Data:', error);
+      }
+    };
+    fetchFaqs();
+    fetchAboutData();
+  }, []);
 
   return (
     <div className="bg-background min-h-screen">
@@ -112,17 +132,22 @@ const About = () => {
 
       {/* 2. About the Journal */}
       <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4">
           <ScrollReveal>
-            <span className="text-accent font-extrabold tracking-widest uppercase text-xs mb-2 block">Introduction</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-6">About The Journal</h2>
-            <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent mx-auto rounded-full mb-8"></div>
-            <p className="text-light-text text-lg leading-relaxed mb-6">
-              The Journal of society, behaviour and institutions is a premier international publishing house established with the core purpose of bridging the gap between rigorous academic research and real-world application. 
-            </p>
-            <p className="text-light-text text-lg leading-relaxed">
-              We publish cutting-edge, peer-reviewed research across multiple disciplines including Technology, Medicine, Arts, and Sciences, providing a robust platform for researchers worldwide to share their innovative discoveries.
-            </p>
+            <span className="text-accent font-extrabold tracking-widest uppercase text-xs mb-2 block text-left">Introduction</span>
+            <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-6 text-left">About The Journal</h2>
+            <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent rounded-full mb-10 shadow-sm"></div>
+            <div 
+              className="text-slate-700 text-lg md:text-xl leading-relaxed md:leading-loose text-left w-full break-words whitespace-normal
+              [&>p]:!text-left [&>p]:!whitespace-normal [&>p]:mb-6 [&>p:last-child]:mb-0 
+              [&>h1]:text-3xl [&>h1]:font-bold [&>h1]:text-text [&>h1]:mb-4 [&>h1]:mt-8
+              [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-text [&>h2]:mb-4 [&>h2]:mt-6
+              [&>ul]:list-none [&>ul]:mb-6 [&>ul>li]:mb-2
+              [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6 [&>ol>li]:mb-2
+              [&>blockquote]:italic [&>blockquote]:text-slate-500 [&>blockquote]:my-6
+              about-intro-text"
+              dangerouslySetInnerHTML={{ __html: aboutData.introduction }}
+            />
           </ScrollReveal>
         </div>
       </section>
@@ -139,9 +164,9 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-text mb-4">Our Mission</h3>
                 <ul className="space-y-3 text-light-text text-sm">
-                  <li className="flex gap-2"><FaCheckCircle className="text-accent mt-1 shrink-0" /> Promote high-quality research</li>
-                  <li className="flex gap-2"><FaCheckCircle className="text-accent mt-1 shrink-0" /> Provide a robust publication platform</li>
-                  <li className="flex gap-2"><FaCheckCircle className="text-accent mt-1 shrink-0" /> Encourage global knowledge sharing</li>
+                  {aboutData.mission.map((item, i) => item ? (
+                    <li key={i} className="flex gap-2"><FaCheckCircle className="text-accent mt-1 shrink-0" /> {item}</li>
+                  ) : null)}
                 </ul>
               </div>
             </ScrollReveal>
@@ -154,9 +179,9 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-text mb-4">Our Vision</h3>
                 <ul className="space-y-3 text-light-text text-sm">
-                  <li className="flex gap-2"><FaCheckCircle className="text-primary mt-1 shrink-0" /> Connect the global research community</li>
-                  <li className="flex gap-2"><FaCheckCircle className="text-primary mt-1 shrink-0" /> Maintain international quality standards</li>
-                  <li className="flex gap-2"><FaCheckCircle className="text-primary mt-1 shrink-0" /> Support innovation & academic excellence</li>
+                  {aboutData.vision.map((item, i) => item ? (
+                    <li key={i} className="flex gap-2"><FaCheckCircle className="text-primary mt-1 shrink-0" /> {item}</li>
+                  ) : null)}
                 </ul>
               </div>
             </ScrollReveal>
@@ -169,9 +194,9 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-text mb-4">Our Objectives</h3>
                 <ul className="space-y-3 text-light-text text-sm">
-                  <li className="flex gap-2"><FaCheckCircle className="text-blue-500 mt-1 shrink-0" /> Publish high-quality research</li>
-                  <li className="flex gap-2"><FaCheckCircle className="text-blue-500 mt-1 shrink-0" /> Promote Open Access research</li>
-                  <li className="flex gap-2"><FaCheckCircle className="text-blue-500 mt-1 shrink-0" /> Maintain strict publishing ethics</li>
+                  {aboutData.objectives.map((item, i) => item ? (
+                    <li key={i} className="flex gap-2"><FaCheckCircle className="text-blue-500 mt-1 shrink-0" /> {item}</li>
+                  ) : null)}
                 </ul>
               </div>
             </ScrollReveal>
@@ -189,14 +214,18 @@ const About = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
+            {aboutData.features.map((feature, i) => {
+              // Map icon string to component if needed, else fallback
+              const IconComp = <FaCheckCircle />; 
+              return (
               <ScrollReveal key={i} delay={i * 0.05}>
                 <div className="flex flex-col items-center p-6 bg-gray-50 rounded-xl hover:bg-primary hover:text-white hover:-translate-y-2 transition-all duration-300 text-center group border border-gray-100 hover:shadow-lg">
-                  <div className="text-3xl text-primary group-hover:text-white mb-4 transition-colors">{feature.icon}</div>
+                  <div className="text-3xl text-primary group-hover:text-white mb-4 transition-colors">{IconComp}</div>
                   <h4 className="font-bold text-sm md:text-base text-text group-hover:text-white transition-colors">{feature.title}</h4>
                 </div>
               </ScrollReveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -211,16 +240,19 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {areas.map((area, i) => (
+            {aboutData.researchAreas.map((area, i) => {
+              const IconComp = <FaCheckCircle />;
+              return (
               <ScrollReveal key={i} delay={i * 0.05}>
                 <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 transition-all cursor-pointer group">
                   <div className="p-3 bg-accent/10 text-accent rounded-lg group-hover:bg-accent group-hover:text-white transition-colors">
-                    {area.icon}
+                    {IconComp}
                   </div>
                   <span className="font-semibold text-text text-sm">{area.name}</span>
                 </div>
               </ScrollReveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -235,11 +267,11 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, i) => (
+            {aboutData.team.map((member, i) => (
               <ScrollReveal key={i} delay={i * 0.1}>
                 <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
                   <div className="h-64 overflow-hidden relative">
-                    <img src={member.img} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={member.img || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                   <div className="p-6 text-center bg-white border border-t-0 border-gray-100 rounded-b-2xl">
@@ -262,26 +294,19 @@ const About = () => {
             <p className="text-white/80 max-w-2xl mx-auto">A transparent, rigorous, and efficient timeline from submission to final publication.</p>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-between relative">
-            {/* Connecting Line for Desktop */}
-            <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-white/20 -translate-y-1/2 z-0"></div>
-            
-            {processSteps.map((step, i) => (
-              <ScrollReveal key={i} delay={i * 0.1} direction="right">
-                <div className="flex flex-col items-center relative z-10 mb-8 md:mb-0 group">
-                  <div className="w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center text-xl font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] mb-4 group-hover:scale-110 transition-transform">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+            {aboutData.processSteps.map((step, i) => step ? (
+              <ScrollReveal key={i} delay={i * 0.1} direction="up">
+                <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition-all group h-full flex flex-col">
+                  <div className="w-14 h-14 rounded-xl bg-white text-primary flex items-center justify-center text-xl font-bold shadow-lg mb-5 group-hover:scale-110 transition-transform shrink-0">
                     {i + 1}
                   </div>
-                  <div className="text-sm font-bold tracking-wide uppercase text-center w-24">
+                  <div className="text-sm font-medium leading-relaxed text-white/90 whitespace-pre-line">
                     {step}
                   </div>
-                  {/* Mobile connecting arrow */}
-                  {i < processSteps.length - 1 && (
-                    <div className="md:hidden text-white/40 my-2">↓</div>
-                  )}
                 </div>
               </ScrollReveal>
-            ))}
+            ) : null)}
           </div>
         </div>
       </section>
@@ -290,7 +315,7 @@ const About = () => {
       <section className="py-20 bg-gray-50 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {stats.map((stat, i) => (
+            {aboutData.stats.map((stat, i) => (
               <ScrollReveal key={i} delay={i * 0.05}>
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
                   <div className="text-2xl md:text-3xl font-extrabold text-primary mb-2 font-poppins">{stat.value}</div>
@@ -404,31 +429,35 @@ const About = () => {
             <ScrollReveal delay={0.2}>
               <h2 className="text-3xl font-extrabold font-poppins text-text mb-8">Frequently Asked Questions</h2>
               <div className="space-y-3">
-                {faqs.map((faq, i) => (
-                  <div key={i} className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
-                    <button 
-                      onClick={() => setActiveFaq(activeFaq === i ? null : i)}
-                      className="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
-                    >
-                      <span className="font-bold text-sm md:text-base text-text">{faq.q}</span>
-                      <motion.div animate={{ rotate: activeFaq === i ? 180 : 0 }}>
-                        <FaChevronDown className="text-light-text" />
-                      </motion.div>
-                    </button>
-                    <AnimatePresence>
-                      {activeFaq === i && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="px-6 pb-4 text-sm text-light-text bg-gray-50 border-t border-gray-50"
-                        >
-                          <div className="pt-2">{faq.a}</div>
+                {faqs.length > 0 ? (
+                  faqs.map((faq, i) => (
+                    <div key={faq._id} className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+                      <button 
+                        onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+                        className="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                      >
+                        <span className="font-bold text-sm md:text-base text-text">{faq.question}</span>
+                        <motion.div animate={{ rotate: activeFaq === i ? 180 : 0 }}>
+                          <FaChevronDown className="text-light-text" />
                         </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))}
+                      </button>
+                      <AnimatePresence>
+                        {activeFaq === i && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="px-6 pb-4 text-sm text-light-text bg-gray-50 border-t border-gray-50"
+                          >
+                            <div className="pt-2">{faq.answer}</div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-light-text">No FAQs available at the moment.</p>
+                )}
               </div>
             </ScrollReveal>
 

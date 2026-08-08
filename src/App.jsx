@@ -10,14 +10,12 @@ import Journals from './pages/Journals/Journals'
 import JournalDetails from './pages/JournalDetails/JournalDetails'
 import Announcements from './pages/Announcements/Announcements'
 import AnnouncementDetails from './pages/AnnouncementDetails/AnnouncementDetails'
-import SubmissionGuidelines from './pages/SubmissionGuidelines/SubmissionGuidelines'
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
 import Terms from './pages/Terms/Terms'
 import Contact from './pages/Contact/Contact'
 import NotFound from './pages/NotFound/NotFound'
 import EditorialBoard from './pages/EditorialBoard/EditorialBoard'
-import PeerReviewPolicy from './pages/PeerReviewPolicy/PeerReviewPolicy'
-import Ethics from './pages/Ethics/Ethics'
+import JournalPage from './pages/JournalPage/JournalPage'
 
 function App() {
   return (
@@ -31,13 +29,11 @@ function App() {
           <Route path="journals/:id" element={<JournalDetails />} />
           <Route path="announcements" element={<Announcements />} />
           <Route path="announcements/:id" element={<AnnouncementDetails />} />
-          <Route path="submission-guidelines" element={<SubmissionGuidelines />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms" element={<Terms />} />
           <Route path="contact" element={<Contact />} />
           <Route path="editorial-board" element={<EditorialBoard />} />
-          <Route path="peer-review-policy" element={<PeerReviewPolicy />} />
-          <Route path="ethics" element={<Ethics />} />
+          <Route path=":slug" element={<JournalPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

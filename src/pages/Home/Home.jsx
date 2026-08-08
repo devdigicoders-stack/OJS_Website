@@ -7,7 +7,8 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
-import { latestJournals, statistics, departments, announcements, features, steps } from '../../data/dummyData';
+import { useState, useEffect } from 'react';
+import { features, steps } from '../../data/dummyData';
 import { FaLaptopCode, FaCogs, FaStethoscope, FaChartLine, FaBookReader, FaBalanceScale, FaGavel, FaPalette, FaDownload, FaEye, FaArrowRight, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaUserCheck, FaLockOpen, FaLink, FaShippingFast, FaGlobe, FaShieldAlt, FaBook, FaFileAlt, FaChalkboardTeacher, FaUniversity } from 'react-icons/fa';
 
 const iconMap = {
@@ -86,6 +87,97 @@ const ScrollReveal = ({ children, delay = 0, direction = "up" }) => {
   );
 };
 
+// Review Submission Form Component
+const ReviewForm = () => {
+  const [form, setForm] = useState({ author: '', role: '', email: '', text: '', rating: 5 });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.author.trim() || !form.text.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/reviews/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        setForm({ author: '', role: '', email: '', text: '', rating: 5 });
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="mt-12 max-w-2xl mx-auto text-center bg-white p-8 rounded-2xl border border-green-100 shadow-sm">
+        <div className="text-4xl mb-3">✅</div>
+        <h3 className="text-lg font-bold text-text mb-2">Thank you for your review!</h3>
+        <p className="text-light-text text-sm">Your review has been submitted and will appear here after approval.</p>
+        <button onClick={() => setSubmitted(false)} className="mt-4 text-primary text-sm font-semibold hover:underline">
+          Submit another review
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-12 max-w-2xl mx-auto">
+      <div className="text-center mb-6">
+        <h3 className="text-xl font-bold font-poppins text-text">Share Your Experience</h3>
+        <p className="text-light-text text-sm mt-1">Have you published with us? Let the community know!</p>
+      </div>
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <input
+            type="text" name="author" value={form.author} onChange={handleChange} required
+            placeholder="Your Name *"
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          />
+          <input
+            type="text" name="role" value={form.role} onChange={handleChange}
+            placeholder="Your Role (e.g. Researcher)"
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          />
+        </div>
+        <input
+          type="email" name="email" value={form.email} onChange={handleChange}
+          placeholder="Your Email (optional)"
+          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary mb-4"
+        />
+        <textarea
+          name="text" value={form.text} onChange={handleChange} required rows={4}
+          placeholder="Write your review... *"
+          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary mb-4 resize-none"
+        />
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-light-text">Rating:</span>
+            {[1,2,3,4,5].map(star => (
+              <button key={star} type="button" onClick={() => setForm({ ...form, rating: star })}
+                className={`text-2xl transition-colors ${star <= form.rating ? 'text-yellow-400' : 'text-gray-200'}`}
+              >★</button>
+            ))}
+          </div>
+          <button type="submit" disabled={submitting}
+            className="btn-primary py-2.5 px-8 rounded-lg text-sm font-semibold disabled:opacity-50 inline-flex items-center gap-2"
+          >
+            {submitting ? 'Submitting...' : 'Submit Review'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 const Home = () => {
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -96,6 +188,55 @@ const Home = () => {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "80%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
+  const [stats, setStats] = useState([]);
+  const [domains, setDomains] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [journals, setJournals] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const [homeRes, journalsRes, annRes, reviewsRes] = await Promise.all([
+          fetch(`${import.meta.env.VITE_API_URL}/home-page/public`),
+          fetch(`${import.meta.env.VITE_API_URL}/journals/public`),
+          fetch(`${import.meta.env.VITE_API_URL}/announcements/public`),
+          fetch(`${import.meta.env.VITE_API_URL}/reviews/approved`)
+        ]);
+
+        if (homeRes.ok) {
+          const homeData = await homeRes.json();
+          setStats(homeData.stats || []);
+          setDomains(homeData.domains || []);
+        }
+
+        if (journalsRes.ok) {
+          const journalsData = await journalsRes.json();
+          // Filter out unpublished journals if needed, and take top 3
+          const publishedJournals = journalsData.filter(j => j.status === 'Published').slice(0, 3);
+          setJournals(publishedJournals);
+        }
+
+        if (annRes.ok) {
+          const annData = await annRes.json();
+          const activeAnns = annData.filter(a => a.status === 'Published').slice(0, 5);
+          setAnnouncements(activeAnns);
+        }
+
+        if (reviewsRes.ok) {
+          const reviewsData = await reviewsRes.json();
+          setReviews(reviewsData);
+        }
+      } catch (error) {
+        console.error('Error fetching home data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHomeData();
+  }, []);
 
   return (
     <div className="w-full">
@@ -168,8 +309,8 @@ const Home = () => {
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             className="grid grid-cols-2 md:grid-cols-4 gap-6"
-          >  {statistics.map((stat, index) => (
-              <ScrollReveal key={stat.id} delay={index * 0.1}>
+          >  {stats.map((stat, index) => (
+              <ScrollReveal key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -5, scale: 1.02 }}
                   className="bg-white/90 backdrop-blur-md rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white p-4 text-center group cursor-pointer relative overflow-hidden"
@@ -233,31 +374,31 @@ const Home = () => {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {latestJournals.map((journal, index) => (
-              <ScrollReveal key={journal.id} delay={index * 0.05} direction="up">
+            {journals.length > 0 ? journals.map((journal, index) => (
+              <ScrollReveal key={journal._id || index} delay={index * 0.05} direction="up">
                 <motion.div
                   whileHover={{ y: -8 }}
                   className="bg-white rounded-xl shadow-md hover:shadow-2xl hover:shadow-primary/10 border border-gray-100 flex flex-col group h-full transition-all duration-300"
                 >
                   <div className="relative h-44 overflow-hidden rounded-t-xl">
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent z-10"></div>
-                    <img src={journal.image} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <img src={journal.coverImage ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${journal.coverImage}` : "https://via.placeholder.com/400x300"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-primary text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm z-20">
-                      {journal.department}
+                      {journal.researchArea || 'Journal'}
                     </div>
                     <div className="absolute bottom-3 left-3 right-3 z-20 flex justify-between text-white text-xs font-medium">
-                      <span>{journal.date}</span>
-                      <span>Vol {journal.volume}</span>
+                      <span>{new Date(journal.createdAt).toLocaleDateString()}</span>
+                      <span>Vol {journal.volume || 1}</span>
                     </div>
                   </div>
                   <div className="p-5 flex flex-col flex-grow">
                     <h3 className="text-base font-bold font-poppins text-text mb-2 leading-snug line-clamp-2 group-hover:text-primary transition-colors">{journal.title}</h3>
                     <p className="text-xs text-accent font-semibold mb-3 uppercase flex items-center gap-1">
-                      <FaChalkboardTeacher size={12} /> {journal.author}
+                      <FaChalkboardTeacher size={12} /> {journal.authors?.map(a => a.name).join(', ') || 'Unknown Author'}
                     </p>
                     <p className="text-light-text text-xs mb-5 line-clamp-3 flex-grow">{journal.abstract}</p>
                     <div className="flex gap-2 mt-auto pt-4 border-t border-gray-50">
-                      <Link to={`/journals/${journal.id}`} className="flex-1 text-center text-xs py-2 bg-gray-50 hover:bg-primary hover:text-white rounded-lg text-text font-medium transition-colors flex items-center justify-center gap-1">
+                      <Link to={`/journals/${journal._id}`} className="flex-1 text-center text-xs py-2 bg-gray-50 hover:bg-primary hover:text-white rounded-lg text-text font-medium transition-colors flex items-center justify-center gap-1">
                         <FaEye /> View
                       </Link>
                       <button className="flex-1 bg-primary/10 hover:bg-primary text-primary hover:text-white font-medium text-center text-xs py-2 rounded-lg transition-colors flex items-center justify-center gap-1 group/btn">
@@ -267,7 +408,7 @@ const Home = () => {
                   </div>
                 </motion.div>
               </ScrollReveal>
-            ))}
+            )) : <div className="col-span-3 text-center text-gray-500 py-10">No recent publications found.</div>}
           </div>
           <ScrollReveal direction="up">
             <div className="text-center mt-12">
@@ -291,8 +432,8 @@ const Home = () => {
           </ScrollReveal>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {departments.map((dept, index) => (
-              <ScrollReveal key={dept.id} delay={index * 0.05} direction="up">
+            {domains.map((dept, index) => (
+              <ScrollReveal key={index} delay={index * 0.05} direction="up">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -301,7 +442,7 @@ const Home = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative z-10 flex flex-col items-center justify-center">
                     <div className="p-4 bg-primary rounded-xl text-white group-hover:-translate-y-2 transition-transform duration-300 shadow-md">
-                      {iconMap[dept.icon]}
+                      {iconMap[dept.icon] || <FaBook size={28} className="text-white mb-2" />}
                     </div>
                     <h3 className="text-sm font-bold font-poppins text-text mt-4 group-hover:text-primary transition-colors">{dept.name}</h3>
                   </div>
@@ -371,7 +512,7 @@ const Home = () => {
               </div>
               <ScrollReveal direction="left">
                 <div className="mt-8">
-                  <Link to="/submission-guidelines" className="btn-primary py-3 px-8 rounded-lg shadow-md hover:shadow-primary/40 inline-flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                  <Link to="/author-submission-guidelines" className="btn-primary py-3 px-8 rounded-lg shadow-md hover:shadow-primary/40 inline-flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
                     Start Submission <FaArrowRight size={12} />
                   </Link>
                 </div>
@@ -411,22 +552,88 @@ const Home = () => {
               pagination={{ clickable: true }}
               className="pb-12"
             >
-              {announcements.map((item) => (
-                <SwiperSlide key={item.id}>
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 hover:bg-white/20 transition-all duration-300 h-full flex flex-col cursor-pointer"
-                  >
-                    <div className="text-xs text-accent font-bold mb-3">{item.date}</div>
-                    <h3 className="text-lg font-bold font-poppins mb-3 leading-snug">{item.title}</h3>
-                    <p className="text-gray-300 text-xs mb-6 leading-relaxed flex-grow">{item.description}</p>
-                    <span className="text-white text-xs font-bold flex items-center gap-1 group">
-                      Read Full <FaArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </motion.div>
+              {announcements.map((item, index) => (
+                <SwiperSlide key={item._id || index}>
+                  <Link to={`/announcements/${item._id}`} style={{ textDecoration: 'none' }}>
+                    <motion.div
+                      whileHover={{ y: -5 }}
+                      className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 hover:bg-white/20 transition-all duration-300 h-full flex flex-col cursor-pointer"
+                    >
+                      <div className="text-xs text-accent font-bold mb-3">
+                        {item.publishDate ? new Date(item.publishDate).toLocaleDateString() : 'New'}
+                      </div>
+                      <h3 className="text-lg font-bold font-poppins mb-3 leading-snug text-white">{item.title}</h3>
+                      <p className="text-gray-300 text-xs mb-6 leading-relaxed flex-grow">{item.category}</p>
+                      <span className="text-white text-xs font-bold flex items-center gap-1 group">
+                        Read Full <FaArrowRight size={10} className="group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    </motion.div>
+                  </Link>
                 </SwiperSlide>
               ))}
             </Swiper>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Customer Reviews Section */}
+      <section className="py-20 bg-gray-50 border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal direction="up">
+            <div className="text-center mb-12">
+              <span className="text-accent font-bold tracking-widest uppercase text-xs mb-2 block">Testimonials</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-4">What Authors Say</h2>
+              <div className="h-1 w-16 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"></div>
+            </div>
+          </ScrollReveal>
+
+          {reviews.length > 0 && (
+            <ScrollReveal direction="up">
+              <Swiper
+                modules={[Autoplay, Pagination]}
+                spaceBetween={30}
+                slidesPerView={1}
+                breakpoints={{
+                  768: { slidesPerView: 2 },
+                  1024: { slidesPerView: 3 },
+                }}
+                autoplay={{ delay: 6000 }}
+                pagination={{ clickable: true }}
+                className="pb-12"
+              >
+                {reviews.map((review, index) => (
+                  <SwiperSlide key={index}>
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full relative">
+                      <div className="absolute top-6 right-8 text-6xl text-gray-100 font-serif leading-none">"</div>
+                      <div className="flex gap-1 mb-4 text-yellow-400 text-sm relative z-10">
+                        {[...Array(review.rating || 5)].map((_, i) => (
+                          <span key={i}>★</span>
+                        ))}
+                      </div>
+                      <p className="text-light-text text-sm leading-relaxed mb-6 italic flex-grow relative z-10">
+                        "{review.text}"
+                      </p>
+                      <div className="flex items-center gap-4 relative z-10">
+                        <img 
+                          src={review.image || "https://via.placeholder.com/150"} 
+                          alt={review.author} 
+                          className="w-12 h-12 rounded-full object-cover border-2 border-primary/20"
+                        />
+                        <div>
+                          <h4 className="font-bold text-text text-sm">{review.author}</h4>
+                          <p className="text-accent text-xs">{review.role}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </ScrollReveal>
+          )}
+
+          {/* Review Submit Form */}
+          <ScrollReveal direction="up">
+            <ReviewForm />
           </ScrollReveal>
         </div>
       </section>

@@ -73,7 +73,7 @@ const Announcements = () => {
   };
 
   return (
-    <div className="bg-background min-h-screen pb-20">
+    <div className="bg-background min-h-screen pb-20 overflow-x-hidden">
       
       {/* 1. Hero Banner */}
       <section className="relative h-[35vh] min-h-[250px] flex flex-col items-center justify-center overflow-hidden">
@@ -102,7 +102,7 @@ const Announcements = () => {
         
         {/* 2. Search & Filters */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-10">
-          <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div className="flex flex-col gap-4 justify-between items-stretch">
             
             {/* Search */}
             <div className="relative w-full md:w-1/3">
@@ -117,7 +117,7 @@ const Announcements = () => {
             </div>
 
             {/* Filters */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <div className="flex flex-col gap-3 w-full">
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <FaFilter className="text-gray-400" />
                 <select 
@@ -159,7 +159,7 @@ const Announcements = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className={`bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border-y border-r border-gray-100 flex flex-col h-full relative group border-l-4 ${styles.border}`}
+                    className={`bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border-y border-r border-gray-100 flex flex-col h-full relative group border-l-4 overflow-hidden ${styles.border}`}
                   >
                     
                     <div className="flex justify-between items-start mb-4">
@@ -197,7 +197,7 @@ const Announcements = () => {
                       </div>
                     )}
 
-                    <h3 className="font-bold font-poppins text-lg text-text mb-3 leading-snug group-hover:text-primary transition-colors">
+                    <h3 className="font-bold font-poppins text-lg text-text mb-3 leading-snug group-hover:text-primary transition-colors break-words w-full">
                       <Link to={`/announcements/${item._id}`}>{item.title}</Link>
                     </h3>
 
@@ -244,11 +244,16 @@ const Announcements = () => {
 
         {/* Pagination */}
         {filteredAnnouncements.length > 0 && (
-          <div className="flex justify-center mt-12 gap-2">
-            <button className="px-4 py-2 border border-border bg-white rounded-lg text-sm font-medium hover:bg-gray-50 text-text transition-colors">&lt;&lt; Prev</button>
-            <button className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium shadow-md">1</button>
-            <button className="px-4 py-2 border border-border bg-white rounded-lg text-sm font-medium hover:bg-gray-50 text-text transition-colors">2</button>
-            <button className="px-4 py-2 border border-border bg-white rounded-lg text-sm font-medium hover:bg-gray-50 text-text transition-colors">Next &gt;&gt;</button>
+          <div className="flex justify-center mt-12 gap-1.5 flex-wrap">
+            <button className="px-3 py-2 border border-border bg-white rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-50 text-text transition-colors whitespace-nowrap">
+              &laquo; Prev
+            </button>
+            <button className="px-3 py-2 bg-primary text-white rounded-lg text-xs sm:text-sm font-medium shadow-md">1</button>
+            <button className="px-3 py-2 border border-border bg-white rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-50 text-text transition-colors">2</button>
+            <button className="px-3 py-2 border border-border bg-white rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-50 text-text transition-colors">3</button>
+            <button className="px-3 py-2 border border-border bg-white rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-50 text-text transition-colors whitespace-nowrap">
+              Next &raquo;
+            </button>
           </div>
         )}
 

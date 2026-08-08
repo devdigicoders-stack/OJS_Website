@@ -13,9 +13,9 @@ export const navLinks = [
     name: 'Publishing',
     dropdown: true,
     items: [
-      { name: 'Author / Submission Guidelines', path: '/submission-guidelines' },
+      { name: 'Author / Submission Guidelines', path: '/author-submission-guidelines' },
       { name: 'Peer Review Policy', path: '/peer-review-policy' },
-      { name: 'Ethics & Malpractice Statement', path: '/ethics' }
+      { name: 'Ethics & Malpractice Statement', path: '/ethics-malpractice-statement' }
     ]
   },
   {

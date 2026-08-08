@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -58,25 +58,56 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/faqs/public`);
+        if (res.ok) {
+          const data = await res.json();
+          setFaqs(data);
+        }
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      }
+    };
+    fetchFaqs();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate API call
-    toast.success('Message Sent Successfully! We will get back to you soon.', {
-      duration: 4000,
-      position: 'bottom-center',
-      style: {
-        background: '#10B981',
-        color: '#fff',
-        fontWeight: 'bold',
-      },
-    });
-    // Reset form
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    setLoading(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/enquiries/public`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (res.ok) {
+        toast.success('Message Sent Successfully! We will get back to you soon.', {
+          duration: 4000,
+          position: 'bottom-center',
+          style: {
+            background: '#10B981',
+            color: '#fff',
+            fontWeight: 'bold',
+          },
+        });
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        toast.error('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      toast.error('An error occurred. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const contactCards = [
@@ -208,8 +239,12 @@ const Contact = () => {
                 </div>
 
                 <div className="flex gap-4 pt-2">
-                  <button type="submit" className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md">
-                    <FaPaperPlane /> Send Message
+                  <button 
+                    type="submit" 
+                    disabled={loading}
+                    className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Sending...' : <><FaPaperPlane /> Send Message</>}
                   </button>
                   <button type="button" onClick={() => setFormData({ name: '', email: '', phone: '', subject: '', message: '' })} className="px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">
                     Reset
@@ -275,22 +310,17 @@ const Contact = () => {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-text mb-8 text-center">Support FAQ</h2>
             <div className="space-y-1">
-              <FAQItem 
-                question="How can I submit a manuscript?" 
-                answer="You can submit your manuscript through our online submission portal. Please ensure you have read the Submission Guidelines and formatted your paper using our official template before submitting." 
-              />
-              <FAQItem 
-                question="How long does the review process take?" 
-                answer="The standard double-blind peer review process takes approximately 2 to 4 weeks. Once a decision is made, you will be notified via email." 
-              />
-              <FAQItem 
-                question="Who can I contact for technical support?" 
-                answer="If you are facing issues with the submission portal or website, you can email our technical team at support@example.com or use the contact form above." 
-              />
-              <FAQItem 
-                question="How can I download published journals?" 
-                answer="All published journals are open access. You can navigate to the 'Published Journals' section, search for the article, and click the 'Download PDF' button." 
-              />
+              {faqs.length > 0 ? (
+                faqs.map(faq => (
+                  <FAQItem 
+                    key={faq._id}
+                    question={faq.question}
+                    answer={faq.answer}
+                  />
+                ))
+              ) : (
+                <p className="text-center text-light-text">No FAQs available at the moment.</p>
+              )}
             </div>
           </div>
         </ScrollReveal>
