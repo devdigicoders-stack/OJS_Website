@@ -38,7 +38,7 @@ const Terms = () => {
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold text-text mb-4 border-b border-gray-100 pb-2">Introduction</h2>
             <p className="text-light-text leading-relaxed">
-              Welcome to the Open Journal System. By accessing and using this website, you are requested to read these rules carefully. These Terms & Conditions outline the rules and regulations for the use of our publication platform.
+              Welcome to the Journal of society, behaviour and institutions. By accessing and using this website, you are requested to read these rules carefully. These Terms & Conditions outline the rules and regulations for the use of our publication platform.
             </p>
           </div>
         </ScrollReveal>

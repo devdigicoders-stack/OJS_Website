@@ -1,21 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebookF, FaLinkedinIn, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import footerLogo from '../../assets/footer.png';
 import { navLinks } from '../../data/dummyData';
 
 const Footer = () => {
   return (
     <footer className="bg-[#0B1120] text-gray-300 py-12 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* Brand & Description */}
-          <div>
-            <Link to="/" className="text-2xl font-poppins font-bold text-white flex items-center gap-2 mb-4">
-              <span className="bg-primary p-2 rounded-lg leading-none">OJS</span>
-              <span>JournalPortal</span>
-            </Link>
-            <p className="text-sm text-gray-400 mb-6">
-              A premium academic research publishing platform dedicated to sharing knowledge and innovations globally.
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          {/* Brand & About */}
+          <div className="space-y-6">
+            <p to="/" className="inline-block">
+              <img src={footerLogo} alt="Praxis Logo" className="h-[100px] object-contain -ml-4" />
+            </p>
+            <p className="text-white/90 font-medium leading-relaxed text-sm">
+              A publication by Srishti Social Research Foundation (SSRF)
+            </p>
+            <p className="text-white/70 leading-relaxed text-sm mt-2">
+
             </p>
             <h3 className="text-lg font-semibold text-white mb-3">Follow Us</h3>
             <p className="text-xs text-gray-400 mb-4">
@@ -67,7 +70,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} OJS JournalPortal. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Srishti Social Research Foundation (SSRF). All rights reserved.</p>
           <p className="mt-2 md:mt-0">
             Crafted by <a href="https://digicoders.in/" target="_blank" rel="noreferrer" className="text-primary hover:text-white transition-colors font-bold">Team DIgicoders</a>
           </p>

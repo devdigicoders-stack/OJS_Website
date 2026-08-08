@@ -1,20 +1,53 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   FaCalendarAlt, FaUserTie, FaShareAlt, FaChevronLeft,
-  FaFilePdf, FaEnvelope, FaPhoneAlt
+  FaFilePdf, FaEnvelope, FaPhoneAlt, FaFileAlt
 } from 'react-icons/fa';
-import { announcements } from '../../data/dummyData';
+import toast from 'react-hot-toast';
 
 const AnnouncementDetails = () => {
   const { id } = useParams();
-  const announcement = announcements.find(a => a.id === parseInt(id));
+  const [announcement, setAnnouncement] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
+    const fetchAnnouncement = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/announcements/public/${id}`);
+        if (!res.ok) throw new Error('Not found');
+        const data = await res.json();
+        setAnnouncement(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnnouncement();
   }, [id]);
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: announcement.title,
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard!');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-[50vh] flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   if (!announcement) {
     return (
@@ -59,46 +92,69 @@ const AnnouncementDetails = () => {
             <div className="flex flex-wrap items-center gap-6 mb-8 py-4 border-y border-gray-100">
               <div className="flex items-center gap-2 text-sm text-light-text font-medium">
                 <FaCalendarAlt className="text-primary/60 text-lg" /> 
-                Published on <span className="text-text font-bold">{announcement.date}</span>
+                Published on <span className="text-text font-bold">{new Date(announcement.publishDate).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-light-text font-medium">
                 <FaUserTie className="text-primary/60 text-lg" /> 
-                Posted by <span className="text-text font-bold">{announcement.postedBy}</span>
+                Posted by <span className="text-text font-bold">Admin</span>
               </div>
             </div>
 
             {/* Banner Image */}
-            <div className="w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden mb-10 shadow-md">
-              <img 
-                src={announcement.bannerImage} 
-                alt={announcement.title} 
-                className="w-full h-full object-cover"
-              />
-            </div>
+            {announcement.mediaPath && announcement.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) && (
+              <div className="w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden mb-10 shadow-md">
+                <img 
+                  src={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${announcement.mediaPath.replace(/\\/g, '/')}`}
+                  alt={announcement.title} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
 
             {/* Full Description */}
             <div className="prose prose-lg max-w-none text-light-text mb-12 leading-relaxed">
-              <p>{announcement.fullDescription}</p>
+              <p>{announcement.content || announcement.title}</p>
             </div>
 
             {/* Attachments & Actions */}
             <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-red-100 text-red-600 rounded-xl">
-                  <FaFilePdf size={24} />
+              {announcement.mediaPath && !announcement.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) ? (
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-red-100 text-red-600 rounded-xl flex-shrink-0">
+                    <FaFilePdf size={24} />
+                  </div>
+                  <div className="overflow-hidden">
+                    <h4 className="font-bold text-text truncate">Attached Document</h4>
+                    <p className="text-xs text-light-text truncate">
+                      {announcement.mediaPath.split('/').pop().split('\\').pop()}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-text">Attached Document</h4>
-                  <p className="text-xs text-light-text">Official Notice (PDF, 2.4 MB)</p>
+              ) : (
+                <div className="flex items-center gap-4">
+                   <div className="p-3 bg-blue-100 text-blue-600 rounded-xl">
+                      <FaFileAlt size={24} />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-text">Announcement Details</h4>
+                     <p className="text-xs text-light-text">Official Notification</p>
+                   </div>
                 </div>
-              </div>
+              )}
+              
               <div className="flex gap-3 w-full sm:w-auto">
-                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-text font-bold py-2.5 px-6 rounded-xl transition-colors border border-gray-200 shadow-sm">
+                <button onClick={handleShare} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-text font-bold py-2.5 px-6 rounded-xl transition-colors border border-gray-200 shadow-sm">
                   <FaShareAlt /> Share
                 </button>
-                <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-md">
-                  Download
-                </button>
+                {announcement.mediaPath && !announcement.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) && (
+                  <a 
+                    href={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${announcement.mediaPath.replace(/\\/g, '/')}`}
+                    target="_blank" rel="noreferrer"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-md"
+                  >
+                    Download
+                  </a>
+                )}
               </div>
             </div>
 

@@ -1,10 +1,31 @@
 export const navLinks = [
   { name: 'Home', path: '/' },
-  { name: 'About Us', path: '/about' },
-  { name: 'Published Journals', path: '/journals' },
-  { name: 'Latest Announcements', path: '/announcements' },
-  { name: 'Submission Guidelines', path: '/submission-guidelines' },
-  { name: 'Contact Us', path: '/contact' },
+  { 
+    name: 'About', 
+    dropdown: true,
+    items: [
+      { name: 'About the journal (aims & scope)', path: '/about' },
+      { name: 'Editorial Board', path: '/editorial-board' },
+      { name: 'Contact / Editorial Office', path: '/contact' }
+    ]
+  },
+  {
+    name: 'Publishing',
+    dropdown: true,
+    items: [
+      { name: 'Author / Submission Guidelines', path: '/submission-guidelines' },
+      { name: 'Peer Review Policy', path: '/peer-review-policy' },
+      { name: 'Ethics & Malpractice Statement', path: '/ethics' }
+    ]
+  },
+  {
+    name: 'Journal',
+    dropdown: true,
+    items: [
+      { name: 'Current Issue + Archives', path: '/journals' },
+      { name: 'Latest Announcements', path: '/announcements' }
+    ]
+  }
 ];
 
 export const statistics = [
@@ -159,7 +180,7 @@ export const announcements = [
     category: 'Journal News',
     date: '01 August 2026',
     description: 'Welcome to our new esteemed editorial board members from top global universities.',
-    fullDescription: 'The Open Journal System is proud to welcome three new highly distinguished professors to our Editorial Board. Their expertise in Advanced Computing and Renewable Energy will significantly elevate the quality and rigor of our peer-review process.',
+    fullDescription: 'The Journal of society, behaviour and institutions is proud to welcome three new highly distinguished professors to our Editorial Board. Their expertise in Advanced Computing and Renewable Energy will significantly elevate the quality and rigor of our peer-review process.',
     postedBy: 'Editor-in-Chief',
     status: 'Upcoming',
     bannerImage: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=1000'

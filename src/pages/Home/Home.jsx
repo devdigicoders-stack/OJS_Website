@@ -134,7 +134,7 @@ const Home = () => {
               Empowering Global Scientific Research
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold font-poppins leading-tight mb-4 text-white drop-shadow-2xl">
-              Open Journal System
+              Journal of society, behaviour and institutions
             </h1>
             <p className="text-base md:text-xl text-gray-100 mb-8 max-w-2xl drop-shadow-md font-light">
               A premium academic publishing platform dedicated to sharing high-impact knowledge globally through rigorous peer review.
@@ -206,7 +206,7 @@ const Home = () => {
                 <span className="text-accent font-bold tracking-widest uppercase text-xs mb-2 block">About The System</span>
                 <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-4 leading-tight">Promoting Academic <span className="text-primary">Excellence</span></h2>
                 <p className="text-light-text mb-6 text-sm leading-relaxed">
-                  The Open Journal System is a premier international publishing house for peer-reviewed academic journals, bridging the gap between research and real-world application.
+                  The Journal of society, behaviour and institutions is a premier international publishing house for peer-reviewed academic journals, bridging the gap between research and real-world application.
                 </p>
                 <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-5 rounded-xl border border-border mb-6 shadow-sm border-l-4 border-l-primary cursor-pointer">
                   <h3 className="font-bold text-lg mb-1 text-primary">Our Mission & Vision</h3>

@@ -15,6 +15,9 @@ import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
 import Terms from './pages/Terms/Terms'
 import Contact from './pages/Contact/Contact'
 import NotFound from './pages/NotFound/NotFound'
+import EditorialBoard from './pages/EditorialBoard/EditorialBoard'
+import PeerReviewPolicy from './pages/PeerReviewPolicy/PeerReviewPolicy'
+import Ethics from './pages/Ethics/Ethics'
 
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms" element={<Terms />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="editorial-board" element={<EditorialBoard />} />
+          <Route path="peer-review-policy" element={<PeerReviewPolicy />} />
+          <Route path="ethics" element={<Ethics />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

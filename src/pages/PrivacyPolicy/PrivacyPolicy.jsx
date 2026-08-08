@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold text-text mb-4 border-b border-gray-100 pb-2">Introduction</h2>
             <p className="text-light-text leading-relaxed">
-              We are deeply committed to protecting your privacy and ensuring the security of your personal data. This Privacy Policy outlines how we collect, use, maintain, and disclose information collected from users (authors, reviewers, and readers) of our Open Journal System.
+              We are deeply committed to protecting your privacy and ensuring the security of your personal data. This Privacy Policy outlines how we collect, use, maintain, and disclose information collected from users (authors, reviewers, and readers) of our Journal of society, behaviour and institutions.
             </p>
           </div>
         </ScrollReveal>

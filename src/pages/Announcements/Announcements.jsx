@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   FaCalendarAlt, FaBullhorn, FaArrowRight, FaSearch, 
   FaFilter, FaUserTie, FaNewspaper, FaFileAlt
 } from 'react-icons/fa';
-import { announcements } from '../../data/dummyData';
+// import { announcements } from '../../data/dummyData';
 
 const ScrollReveal = ({ children, delay = 0 }) => (
   <motion.div
@@ -24,11 +24,29 @@ const Announcements = () => {
 
   const categories = ['All', 'Call for Papers', 'Journal News', 'Editorial Notice', 'Conference', 'Publication Update'];
 
-  // Static filtering
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/announcements/public`);
+        const data = await res.json();
+        setAnnouncements(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch announcements:', error);
+        setLoading(false);
+      }
+    };
+    fetchAnnouncements();
+  }, []);
+
+  // Filter real data
   const filteredAnnouncements = announcements.filter(a => 
     (activeCategory === 'All' || a.category === activeCategory) &&
     (a.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-     a.description.toLowerCase().includes(searchTerm.toLowerCase()))
+     (a.content && a.content.toLowerCase().includes(searchTerm.toLowerCase())))
   );
 
   // Helper to determine border and badge color based on category
@@ -43,10 +61,14 @@ const Announcements = () => {
     }
   };
 
-  const getStatusBadge = (status) => {
-    if (status === 'New') return <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">NEW</span>;
-    if (status === 'Important') return <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">IMPORTANT</span>;
-    if (status === 'Upcoming') return <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">UPCOMING</span>;
+  const getStatusBadge = (ann) => {
+    // If published in last 7 days, show NEW
+    const publishDate = new Date(ann.publishDate);
+    const today = new Date();
+    const diffDays = Math.ceil((Math.abs(today - publishDate)) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays <= 7) return <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">NEW</span>;
+    if (ann.category === 'Alert') return <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm animate-pulse">IMPORTANT</span>;
     return null;
   };
 
@@ -131,7 +153,7 @@ const Announcements = () => {
               const styles = getCategoryStyles(item.category);
               
               return (
-                <ScrollReveal key={item.id} delay={i * 0.05}>
+                <ScrollReveal key={item._id} delay={i * 0.05}>
                   <motion.div 
                     layout
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -145,28 +167,55 @@ const Announcements = () => {
                       <span className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide ${styles.bg} ${styles.text}`}>
                         {styles.icon} {item.category}
                       </span>
-                      {getStatusBadge(item.status)}
+                      {getStatusBadge(item)}
                     </div>
+                    
+                    {/* Media Display */}
+                    {item.mediaPath && (
+                      <div className="mb-4 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 flex justify-center items-center">
+                        {item.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) ? (
+                          <img 
+                            src={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${item.mediaPath.replace(/\\/g, '/')}`} 
+                            alt={item.title} 
+                            className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="p-4 w-full flex items-center justify-between bg-primary/5">
+                            <div className="flex items-center gap-3">
+                              <FaFileAlt className="text-2xl text-primary" />
+                              <span className="text-sm font-semibold text-text truncate">Attachment Document</span>
+                            </div>
+                            <a 
+                              href={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${item.mediaPath.replace(/\\/g, '/')}`}
+                              target="_blank" rel="noreferrer"
+                              className="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded shadow-sm hover:bg-accent transition-colors"
+                            >
+                              View
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <h3 className="font-bold font-poppins text-lg text-text mb-3 leading-snug group-hover:text-primary transition-colors">
-                      <Link to={`/announcements/${item.id}`}>{item.title}</Link>
+                      <Link to={`/announcements/${item._id}`}>{item.title}</Link>
                     </h3>
 
                     <div className="flex flex-col gap-2 mb-4">
                       <div className="flex items-center gap-2 text-sm text-light-text font-medium">
-                        <FaCalendarAlt className="text-gray-400" /> {item.date}
+                        <FaCalendarAlt className="text-gray-400" /> {new Date(item.publishDate).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-2 text-sm text-light-text font-medium">
-                        <FaUserTie className="text-gray-400" /> Posted by: <span className="text-text">{item.postedBy}</span>
+                        <FaUserTie className="text-gray-400" /> Posted by: <span className="text-text">Admin</span>
                       </div>
                     </div>
 
                     <p className="text-sm text-light-text leading-relaxed mb-6 line-clamp-3">
-                      {item.description}
+                      {item.content || item.title}
                     </p>
 
                     <div className="mt-auto pt-4 border-t border-gray-50">
-                      <Link to={`/announcements/${item.id}`} className="inline-flex items-center gap-2 text-primary font-bold hover:text-accent transition-colors group/link text-sm">
+                      <Link to={`/announcements/${item._id}`} className="inline-flex items-center gap-2 text-primary font-bold hover:text-accent transition-colors group/link text-sm">
                         Read More <FaArrowRight className="group-hover/link:translate-x-1 transition-transform" />
                       </Link>
                     </div>
@@ -178,8 +227,14 @@ const Announcements = () => {
           </AnimatePresence>
         </div>
 
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        )}
+
         {/* Empty State */}
-        {filteredAnnouncements.length === 0 && (
+        {!loading && filteredAnnouncements.length === 0 && (
           <div className="text-center py-20 bg-white rounded-2xl border border-gray-100">
             <FaBullhorn className="text-6xl text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-text mb-2">No Announcements Found</h3>

@@ -6,7 +6,7 @@ import {
   FaTags, FaFingerprint, FaFilePdf, FaEye, FaShareAlt, FaSearch, 
   FaFilter, FaThLarge, FaList
 } from 'react-icons/fa';
-import { latestJournals, departments } from '../../data/dummyData';
+import { departments } from '../../data/dummyData';
 
 const ScrollReveal = ({ children, delay = 0 }) => (
   <motion.div
@@ -23,12 +23,32 @@ const Journals = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeDept, setActiveDept] = useState('All');
+  
+  const [journalsList, setJournalsList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
-  // Simple static filtering
-  const filteredJournals = latestJournals.filter(journal => 
+  React.useEffect(() => {
+    const fetchJournals = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/journals/public');
+        if (res.ok) {
+          const data = await res.json();
+          setJournalsList(data);
+        }
+      } catch (error) {
+        console.error('Error fetching journals:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJournals();
+  }, []);
+
+  // Simple filtering
+  const filteredJournals = journalsList.filter(journal => 
     (activeDept === 'All' || journal.department === activeDept) &&
     (journal.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-     journal.keywords.some(k => k.toLowerCase().includes(searchTerm.toLowerCase())))
+     (journal.keywords && journal.keywords.some(k => typeof k === 'string' && k.toLowerCase().includes(searchTerm.toLowerCase()))))
   );
 
   return (
@@ -151,10 +171,15 @@ const Journals = () => {
             </div>
 
             {/* Grid/List View */}
+            {loading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            ) : (
             <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
               <AnimatePresence>
                 {filteredJournals.map((journal, i) => (
-                  <ScrollReveal key={journal.id} delay={i * 0.05}>
+                  <ScrollReveal key={journal._id || i} delay={i * 0.05}>
                     <motion.div 
                       layout
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -169,13 +194,13 @@ const Journals = () => {
                       </div>
 
                       {/* Cover Image */}
-                      <div className={`${viewMode === 'list' ? 'sm:w-1/3 sm:h-auto' : 'w-full'} h-48 overflow-hidden relative shrink-0`}>
-                        <img src={journal.image} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className={`${viewMode === 'list' ? 'sm:w-1/3 sm:h-auto' : 'w-full'} h-48 overflow-hidden relative shrink-0 bg-gray-100 flex items-center justify-center`}>
+                        <img src={journal.image ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                         
                         {/* DOI Badge on Image bottom */}
                         <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white/90 text-xs px-2.5 py-1 rounded-md flex items-center gap-1 border border-white/10">
-                          <FaFingerprint className="text-accent" /> {journal.doi}
+                          <FaFingerprint className="text-accent" /> {journal.doi || 'DOI Pending'}
                         </div>
                       </div>
 
@@ -189,23 +214,19 @@ const Journals = () => {
                         </div>
                         
                         <h3 className="font-bold font-poppins text-lg text-text mb-3 leading-snug group-hover:text-primary transition-colors line-clamp-2">
-                          <Link to={`/journals/${journal.id}`}>{journal.title}</Link>
+                          <Link to={`/journals/${journal._id}`}>{journal.title}</Link>
                         </h3>
 
                         <div className="space-y-2 mb-4">
                           <div className="flex items-center gap-2 text-sm text-light-text">
                             <FaUserGraduate className="text-primary/70 shrink-0" /> 
-                            <span className="truncate font-medium">{journal.author}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-light-text">
-                            <FaUniversity className="text-primary/70 shrink-0" /> 
-                            <span className="truncate">{journal.institution}</span>
+                            <span className="truncate font-medium">{journal.primaryAuthorName || 'Unknown Author'}</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-light-text">
                             <FaCalendarAlt className="text-primary/70 shrink-0" /> 
-                            <span>{journal.publicationDate}</span>
+                            <span>{journal.publishDate ? new Date(journal.publishDate).toLocaleDateString() : (journal.updatedAt ? new Date(journal.updatedAt).toLocaleDateString() : 'N/A')}</span>
                             <span className="mx-1">•</span>
-                            <span className="font-semibold text-text">{journal.volume}, {journal.issue}</span>
+                            <span className="font-semibold text-text">Vol {journal.volume !== '-' ? journal.volume : '1'}, Issue {journal.issue !== '-' ? journal.issue : '1'}</span>
                           </div>
                         </div>
 
@@ -215,7 +236,7 @@ const Journals = () => {
 
                         <div className="flex flex-wrap gap-1.5 mb-6">
                           <FaTags className="text-accent/70 mt-1 mr-1 shrink-0 text-xs" />
-                          {journal.keywords.map((kw, idx) => (
+                          {journal.keywords && journal.keywords.map((kw, idx) => (
                             <span key={idx} className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded border border-gray-200">
                               {kw}
                             </span>
@@ -224,15 +245,14 @@ const Journals = () => {
 
                         {/* Actions (pushed to bottom) */}
                         <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between gap-2">
-                          <Link to={`/journals/${journal.id}`} className="flex-1 flex items-center justify-center gap-2 bg-gray-50 hover:bg-primary hover:text-white text-primary text-sm font-bold py-2 rounded-lg transition-colors">
+                          <Link to={`/journals/${journal._id}`} className="flex-1 flex items-center justify-center gap-2 bg-gray-50 hover:bg-primary hover:text-white text-primary text-sm font-bold py-2 rounded-lg transition-colors">
                             <FaEye /> Details
                           </Link>
-                          <button className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 text-sm font-bold py-2 rounded-lg transition-colors border border-red-100 hover:border-red-600">
+                          {journal.mainFilePath && (
+                          <a href={`http://localhost:5000/${journal.mainFilePath}`} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 text-sm font-bold py-2 rounded-lg transition-colors border border-red-100 hover:border-red-600">
                             <FaFilePdf /> PDF
-                          </button>
-                          <button className="w-10 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors shrink-0">
-                            <FaShareAlt />
-                          </button>
+                          </a>
+                          )}
                         </div>
                       </div>
                     </motion.div>
@@ -240,6 +260,7 @@ const Journals = () => {
                 ))}
               </AnimatePresence>
             </div>
+            )}
 
             {/* Pagination */}
             {filteredJournals.length > 0 && (

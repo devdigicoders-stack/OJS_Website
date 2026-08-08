@@ -118,7 +118,7 @@ const About = () => {
             <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-6">About The Journal</h2>
             <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent mx-auto rounded-full mb-8"></div>
             <p className="text-light-text text-lg leading-relaxed mb-6">
-              The Open Journal System is a premier international publishing house established with the core purpose of bridging the gap between rigorous academic research and real-world application. 
+              The Journal of society, behaviour and institutions is a premier international publishing house established with the core purpose of bridging the gap between rigorous academic research and real-world application. 
             </p>
             <p className="text-light-text text-lg leading-relaxed">
               We publish cutting-edge, peer-reviewed research across multiple disciplines including Technology, Medicine, Arts, and Sciences, providing a robust platform for researchers worldwide to share their innovative discoveries.
