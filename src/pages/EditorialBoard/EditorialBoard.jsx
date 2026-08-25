@@ -71,7 +71,7 @@ const EditorialBoard = () => {
               >
                 <div className="h-64 overflow-hidden relative bg-gray-100 flex items-center justify-center text-gray-400">
                   {member.img ? (
-                    <img src={member.img} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={member.img} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
                   ) : (
                     <FaUsers className="text-6xl opacity-30" />
                   )}

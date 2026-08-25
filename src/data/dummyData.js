@@ -6,6 +6,7 @@ export const navLinks = [
     items: [
       { name: 'About the journal (aims & scope)', path: '/about' },
       { name: 'Editorial Board', path: '/editorial-board' },
+      { name: 'Reviewer Board', path: '/reviewer-board' },
       { name: 'Contact / Editorial Office', path: '/contact' }
     ]
   },
@@ -180,7 +181,7 @@ export const announcements = [
     category: 'Journal News',
     date: '01 August 2026',
     description: 'Welcome to our new esteemed editorial board members from top global universities.',
-    fullDescription: 'The Journal of society, behaviour and institutions is proud to welcome three new highly distinguished professors to our Editorial Board. Their expertise in Advanced Computing and Renewable Energy will significantly elevate the quality and rigor of our peer-review process.',
+    fullDescription: 'The Praxis Journal of Society, Behaviour and Institutional Studies is proud to welcome three new highly distinguished professors to our Editorial Board. Their expertise in Advanced Computing and Renewable Energy will significantly elevate the quality and rigor of our peer-review process.',
     postedBy: 'Editor-in-Chief',
     status: 'Upcoming',
     bannerImage: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=1000'

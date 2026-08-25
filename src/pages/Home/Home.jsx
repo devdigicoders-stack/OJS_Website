@@ -252,7 +252,7 @@ const Home = () => {
   }, []);
 
   const heroConfig = heroData || {
-    title: 'Journal of society, behaviour and institutions',
+    title: 'Praxis Journal of Society, Behaviour and Institutional Studies',
     subtitle: 'A premium academic publishing platform dedicated to sharing high-impact knowledge globally through rigorous peer review.',
     badge: 'Empowering Global Scientific Research',
     primaryButtonText: 'Submit Manuscript',
@@ -389,7 +389,7 @@ const Home = () => {
                 <span className="text-accent font-bold tracking-widest uppercase text-xs mb-2 block">About The System</span>
                 <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-4 leading-tight">Promoting Academic <span className="text-primary">Excellence</span></h2>
                 <p className="text-light-text mb-6 text-sm leading-relaxed">
-                  The Journal of society, behaviour and institutions is a premier international publishing house for peer-reviewed academic journals, bridging the gap between research and real-world application.
+                  The Praxis Journal of Society, Behaviour and Institutional Studies is a premier international publishing house for peer-reviewed academic journals, bridging the gap between research and real-world application.
                 </p>
                 <motion.div whileHover={{ scale: 1.02 }} className="bg-white p-5 rounded-xl border border-border mb-6 shadow-sm border-l-4 border-l-primary cursor-pointer">
                   <h3 className="font-bold text-lg mb-1 text-primary">Our Mission & Vision</h3>
@@ -686,7 +686,7 @@ const Home = () => {
           <ScrollReveal direction="right">
             <span className="text-accent font-bold tracking-widest uppercase text-xs mb-2 block">Contact Support</span>
             <h2 className="text-3xl font-extrabold font-poppins text-text mb-6">Get In Touch</h2>
-            <p className="text-light-text mb-8 text-sm max-w-sm">Reach out to our editorial team for quick support regarding publications.</p>
+            <p className="text-light-text mb-8 text-sm max-w-sm">Reach out to our Editorial Board for quick support regarding publications.</p>
 
             <div className="space-y-6">
               <motion.div whileHover={{ x: 5 }} className="flex items-center gap-4 cursor-pointer group">
