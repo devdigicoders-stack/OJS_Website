@@ -405,21 +405,21 @@ const About = () => {
                   <div className="bg-primary/10 p-3 rounded-lg text-primary"><FaMapMarkerAlt size={20} /></div>
                   <div>
                     <h4 className="font-bold text-sm text-text">Office Address</h4>
-                    <p className="text-xs text-light-text">123 Academic Way, Research Park, NY 10001</p>
+                    <p className="text-xs text-light-text">C 4242 Sector 12 Rajajipuram Lucknow 226017</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-center bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                   <div className="bg-accent/10 p-3 rounded-lg text-accent"><FaEnvelope size={20} /></div>
                   <div>
                     <h4 className="font-bold text-sm text-text">Email Address</h4>
-                    <p className="text-xs text-light-text">support@ojs-system.org</p>
+                    <p className="text-xs text-light-text">editor@praxisjournal.org</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-center bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
                   <div className="bg-blue-100 p-3 rounded-lg text-blue-600"><FaPhoneAlt size={20} /></div>
                   <div>
                     <h4 className="font-bold text-sm text-text">Phone / Office Hours</h4>
-                    <p className="text-xs text-light-text">+1 (555) 123-4567 • Mon-Fri, 9am - 5pm EST</p>
+                    <p className="text-xs text-light-text">+91 80817 16983 • Mon-Fri, 9am - 5pm EST</p>
                   </div>
                 </div>
               </div>

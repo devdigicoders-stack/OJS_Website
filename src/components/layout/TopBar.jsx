@@ -6,13 +6,13 @@ const TopBar = () => {
     <div className="bg-primary text-white text-sm py-2 hidden md:block">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div className="flex items-center gap-6">
-          <a href="mailto:info@journalportal.com" className="flex items-center gap-2 group hover:text-blue-200 transition-colors">
+          <a href="mailto:editor@praxisjournal.org" className="flex items-center gap-2 group hover:text-blue-200 transition-colors">
             <FaEnvelope className="text-blue-300 group-hover:scale-110 transition-transform" />
-            <span>info@journalportal.com</span>
+            <span>editor@praxisjournal.org</span>
           </a>
-          <a href="tel:+1234567890" className="flex items-center gap-2 group hover:text-blue-200 transition-colors">
+          <a href="tel:+918081716983" className="flex items-center gap-2 group hover:text-blue-200 transition-colors">
             <FaPhoneAlt className="text-blue-300 group-hover:scale-110 transition-transform" />
-            <span>+1 (234) 567-890</span>
+            <span>+91 80817 16983</span>
           </a>
         </div>
         <div className="flex items-center gap-4">

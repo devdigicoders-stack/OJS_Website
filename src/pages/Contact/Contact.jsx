@@ -111,9 +111,9 @@ const Contact = () => {
   };
 
   const contactCards = [
-    { icon: <FaMapMarkerAlt />, title: 'Office Address', line1: 'Journal Office Building, Block A', line2: 'New Delhi, India, 110001' },
-    { icon: <FaEnvelope />, title: 'Email Us', line1: 'journal@example.com', line2: 'support@example.com' },
-    { icon: <FaPhoneAlt />, title: 'Call Us', line1: '+91 98765 43210', line2: '+91 11 2345 6789' },
+    { icon: <FaMapMarkerAlt />, title: 'Office Address', line1: 'C 4242 Sector 12', line2: 'Rajajipuram Lucknow 226017' },
+    { icon: <FaEnvelope />, title: 'Email Us', line1: 'editor@praxisjournal.org', line2: '' },
+    { icon: <FaPhoneAlt />, title: 'Call Us', line1: '+91 80817 16983', line2: '' },
     { icon: <FaClock />, title: 'Office Hours', line1: 'Monday – Friday', line2: '09:00 AM – 05:00 PM' },
   ];
 
@@ -207,7 +207,7 @@ const Contact = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+91 12345 67890"
+                      placeholder="+91 80817 16983"
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                     />
                   </div>
@@ -256,7 +256,7 @@ const Contact = () => {
             {/* Right: Google Map */}
             <div className="lg:w-1/2 min-h-[400px] bg-gray-200 relative">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224345.83923192776!2d77.06889754725782!3d28.52758200617607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                src="https://maps.google.com/maps?q=C%204242%20Sector%2012%20Rajajipuram%20Lucknow%20226017&t=&z=15&ie=UTF8&iwloc=&output=embed" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} 
@@ -294,10 +294,10 @@ const Contact = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Need Immediate Assistance?</h2>
               <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">Our dedicated support team is available during office hours to answer your queries regarding paper submission, peer review status, or general technical issues.</p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="mailto:support@example.com" className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold py-3.5 px-8 rounded-xl shadow-md hover:bg-gray-50 transition-colors">
+                <a href="mailto:editor@praxisjournal.org" className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold py-3.5 px-8 rounded-xl shadow-md hover:bg-gray-50 transition-colors">
                   <FaEnvelope /> Email Us
                 </a>
-                <a href="tel:+919876543210" className="inline-flex items-center justify-center gap-2 bg-primary-dark text-white border border-white/20 font-bold py-3.5 px-8 rounded-xl hover:bg-white/10 transition-colors">
+                <a href="tel:+918081716983" className="inline-flex items-center justify-center gap-2 bg-primary-dark text-white border border-white/20 font-bold py-3.5 px-8 rounded-xl hover:bg-white/10 transition-colors">
                   <FaPhoneAlt /> Call Us
                 </a>
               </div>

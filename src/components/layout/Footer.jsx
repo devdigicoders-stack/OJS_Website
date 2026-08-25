@@ -63,9 +63,9 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Contact Info</h3>
             <ul className="space-y-3 text-sm text-gray-400">
-              <li>123 University Avenue, Academic City, AC 12345</li>
-              <li>contact@journalportal.edu</li>
-              <li>+1 (555) 123-4567</li>
+              <li>C 4242 Sector 12 Rajajipuram Lucknow 226017</li>
+              <li>editor@praxisjournal.org</li>
+              <li>+91 80817 16983</li>
             </ul>
           </div>
         </div>

@@ -147,13 +147,13 @@ const Terms = () => {
             <p className="text-light-text mb-6">If you have any queries regarding any of our terms, please contact us.</p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-text font-medium">
-                <FaEnvelope className="text-primary" /> legal@example.com
+                <FaEnvelope className="text-primary" /> editor@praxisjournal.org
               </div>
               <div className="flex items-center gap-3 text-text font-medium">
-                <FaPhoneAlt className="text-primary" /> +91 11 2345 6789
+                <FaPhoneAlt className="text-primary" /> +91 80817 16983
               </div>
               <div className="flex items-center gap-3 text-text font-medium">
-                <FaMapMarkerAlt className="text-primary" /> Journal Office Building, New Delhi, India
+                <FaMapMarkerAlt className="text-primary" /> C 4242 Sector 12 Rajajipuram Lucknow 226017
               </div>
             </div>
           </div>

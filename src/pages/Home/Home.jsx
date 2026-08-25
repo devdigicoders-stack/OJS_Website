@@ -695,7 +695,7 @@ const Home = () => {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-text">Office</h4>
-                  <p className="text-xs text-light-text">123 Academic City, AC 12345</p>
+                  <p className="text-xs text-light-text">C 4242 Sector 12 Rajajipuram Lucknow 226017</p>
                 </div>
               </motion.div>
               <motion.div whileHover={{ x: 5 }} className="flex items-center gap-4 cursor-pointer group">
@@ -704,7 +704,7 @@ const Home = () => {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-text">Email</h4>
-                  <p className="text-xs text-light-text">contact@journalportal.edu</p>
+                  <p className="text-xs text-light-text">editor@praxisjournal.org</p>
                 </div>
               </motion.div>
             </div>
@@ -720,7 +720,7 @@ const Home = () => {
         {/* Static Map */}
         <div className="w-full md:w-1/2 h-[300px] md:h-full">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509374!2d144.95373531531615!3d-37.816279742021665!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d4c2b349649%3A0xb6899234e561db11!2sEnvato!5e0!3m2!1sen!2sus!4v1611815529813!5m2!1sen!2sus"
+            src="https://maps.google.com/maps?q=C%204242%20Sector%2012%20Rajajipuram%20Lucknow%20226017&t=&z=15&ie=UTF8&iwloc=&output=embed"
             width="100%"
             height="100%"
             style={{ border: 0 }}
