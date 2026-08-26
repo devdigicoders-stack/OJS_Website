@@ -147,7 +147,7 @@ const Terms = () => {
             <p className="text-light-text mb-6">If you have any queries regarding any of our terms, please contact us.</p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-text font-medium">
-                <FaEnvelope className="text-primary" /> editor@praxisjournal.org
+                <FaEnvelope className="text-primary" /> Editor@praxis.org.in
               </div>
               <div className="flex items-center gap-3 text-text font-medium">
                 <FaPhoneAlt className="text-primary" /> +91 80817 16983

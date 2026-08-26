@@ -64,7 +64,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-4">Contact Info</h3>
             <ul className="space-y-3 text-sm text-gray-400">
               <li>C 4242 Sector 12 Rajajipuram Lucknow 226017</li>
-              <li>editor@praxisjournal.org</li>
+              <li>Editor@praxis.org.in</li>
               <li>+91 80817 16983</li>
             </ul>
           </div>

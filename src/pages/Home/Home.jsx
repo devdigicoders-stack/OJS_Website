@@ -704,7 +704,7 @@ const Home = () => {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-text">Email</h4>
-                  <p className="text-xs text-light-text">editor@praxisjournal.org</p>
+                  <p className="text-xs text-light-text">Editor@praxis.org.in</p>
                 </div>
               </motion.div>
             </div>

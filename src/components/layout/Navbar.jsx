@@ -17,11 +17,11 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 w-full bg-white/80 backdrop-blur-xl z-50 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-b border-white/60 transition-all duration-300">
       <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6">
-        <div className="flex justify-between h-20 items-center gap-2">
+        <div className="flex justify-between h-28 items-center gap-2">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center">
-              <img src={logo} alt="Praxis Logo" className="h-[75px] object-contain py-1" />
+              <img src={logo} alt="Praxis Logo" className="h-[100px] object-contain py-1" />
             </Link>
           </div>
 
