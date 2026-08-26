@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaEnvelope, FaPhoneAlt, FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaEnvelope, FaPhoneAlt, FaFacebook, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const TopBar = () => {
   return (
@@ -18,7 +18,6 @@ const TopBar = () => {
         <div className="flex items-center gap-4">
           <span className="text-gray-300">Follow Us:</span>
           <a href="https://www.facebook.com/profile.php?id=61593789151403" target="_blank" rel="noreferrer" className="hover:text-blue-300 transition-colors"><FaFacebook /></a>
-          <a href="#" className="hover:text-blue-300 transition-colors"><FaTwitter /></a>
           <a href="https://www.linkedin.com/in/praxis-jsbis-1133a4431/" target="_blank" rel="noreferrer" className="hover:text-blue-300 transition-colors"><FaLinkedin /></a>
           <a href="https://www.instagram.com/praxisjsbis/" target="_blank" rel="noreferrer" className="hover:text-blue-300 transition-colors"><FaInstagram /></a>
         </div>

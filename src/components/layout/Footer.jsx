@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaFacebookF, FaLinkedinIn, FaInstagram, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import footerLogo from '../../assets/footer.png';
 import { navLinks } from '../../data/dummyData';
 
@@ -27,7 +27,6 @@ const Footer = () => {
             <div className="flex space-x-3">
               <a href="https://www.facebook.com/profile.php?id=61593789151403" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all hover:scale-110"><FaFacebookF /></a>
               <a href="https://www.linkedin.com/in/praxis-jsbis-1133a4431/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#0077B5] hover:text-white transition-all hover:scale-110"><FaLinkedinIn /></a>
-              <a href="#" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition-all hover:scale-110"><FaTwitter /></a>
               <a href="https://www.instagram.com/praxisjsbis/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#E4405F] hover:text-white transition-all hover:scale-110"><FaInstagram /></a>
               <a href="#" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#FF0000] hover:text-white transition-all hover:scale-110"><FaYoutube /></a>
             </div>

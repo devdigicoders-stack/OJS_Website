@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock, 
-  FaFacebookF, FaLinkedinIn, FaTwitter, FaInstagram, FaYoutube,
+  FaFacebookF, FaLinkedinIn, FaInstagram, FaYoutube,
   FaPaperPlane, FaChevronDown, FaChevronUp
 } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
@@ -277,7 +277,6 @@ const Contact = () => {
             <div className="flex justify-center gap-4">
               <a href="https://www.facebook.com/profile.php?id=61593789151403" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white border border-gray-200 text-gray-500 hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white rounded-full flex items-center justify-center text-xl transition-all hover:shadow-md hover:scale-110"><FaFacebookF /></a>
               <a href="https://www.linkedin.com/in/praxis-jsbis-1133a4431/" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white border border-gray-200 text-gray-500 hover:bg-[#0077B5] hover:border-[#0077B5] hover:text-white rounded-full flex items-center justify-center text-xl transition-all hover:shadow-md hover:scale-110"><FaLinkedinIn /></a>
-              <a href="#" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white border border-gray-200 text-gray-500 hover:bg-[#1DA1F2] hover:border-[#1DA1F2] hover:text-white rounded-full flex items-center justify-center text-xl transition-all hover:shadow-md hover:scale-110"><FaTwitter /></a>
               <a href="https://www.instagram.com/praxisjsbis/" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white border border-gray-200 text-gray-500 hover:bg-[#E4405F] hover:border-[#E4405F] hover:text-white rounded-full flex items-center justify-center text-xl transition-all hover:shadow-md hover:scale-110"><FaInstagram /></a>
               <a href="#" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white border border-gray-200 text-gray-500 hover:bg-[#FF0000] hover:border-[#FF0000] hover:text-white rounded-full flex items-center justify-center text-xl transition-all hover:shadow-md hover:scale-110"><FaYoutube /></a>
             </div>
