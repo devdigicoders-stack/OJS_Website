@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEnvelope, FaPhoneAlt, FaFacebook, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 const TopBar = () => {
+  const [issn, setIssn] = useState('');
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/settings/public`)
+      .then(res => res.json())
+      .then(data => setIssn(data.issn || ''))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="bg-primary text-white text-sm py-2 hidden md:block">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -14,6 +23,7 @@ const TopBar = () => {
             <FaPhoneAlt className="text-blue-300 group-hover:scale-110 transition-transform" />
             <span>+91 80817 16983</span>
           </a>
+          <span className="text-blue-100">ISSN: {issn}</span>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-gray-300">Follow Us:</span>

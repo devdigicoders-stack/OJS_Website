@@ -410,7 +410,7 @@ const Home = () => {
           <ScrollReveal direction="up">
             <div className="text-center mb-12">
               <span className="text-accent font-bold tracking-widest uppercase text-xs mb-2 block">Publications</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-4">Latest Journals</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold font-poppins text-text mb-4">Latest Papers</h2>
               <div className="h-1 w-16 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"></div>
             </div>
           </ScrollReveal>

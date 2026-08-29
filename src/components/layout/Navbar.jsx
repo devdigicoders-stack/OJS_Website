@@ -94,6 +94,14 @@ const Navbar = () => {
             <button className="text-light-text hover:text-primary p-2 transition-colors duration-200">
               <FiSearch size={20} />
             </button>
+            <a
+              href="https://user.praxis.org.in/login"
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-xl text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-all duration-300 shadow-sm"
+            >
+              User Register
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -163,6 +171,16 @@ const Navbar = () => {
                   />
                   <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-text" />
                 </div>
+              </div>
+              <div className="px-3 pt-2">
+                <a
+                  href="https://user.praxis.org.in/login"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block w-full text-center px-4 py-3 rounded-xl text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-all duration-300"
+                >
+                  User Register
+                </a>
               </div>
             </div>
           </motion.div>
