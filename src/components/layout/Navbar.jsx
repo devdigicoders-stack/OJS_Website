@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { FiSearch, FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
 import logo from '../../assets/logo.png';
 import { navLinks } from '../../data/dummyData';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -91,9 +91,6 @@ const Navbar = () => {
               );
             })}
             
-            <button className="text-light-text hover:text-primary p-2 transition-colors duration-200">
-              <FiSearch size={20} />
-            </button>
             <a
               href="https://user.praxis.org.in/login"
               target="_blank"
@@ -162,16 +159,6 @@ const Navbar = () => {
                   </NavLink>
                 );
               })}
-              <div className="px-3 pt-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search journals..."
-                    className="w-full bg-gray-50 border border-border rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-primary"
-                  />
-                  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-text" />
-                </div>
-              </div>
               <div className="px-3 pt-2">
                 <a
                   href="https://user.praxis.org.in/login"
