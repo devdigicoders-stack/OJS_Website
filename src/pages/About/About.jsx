@@ -412,7 +412,7 @@ const About = () => {
                   <div className="bg-accent/10 p-3 rounded-lg text-accent"><FaEnvelope size={20} /></div>
                   <div>
                     <h4 className="font-bold text-sm text-text">Email Address</h4>
-                    <p className="text-xs text-light-text">Editor@praxis.org.in</p>
+                    <p className="text-xs text-light-text">editor@praxis.org.in</p>
                   </div>
                 </div>
                 <div className="flex gap-4 items-center bg-white p-4 rounded-xl border border-gray-100 shadow-sm">

@@ -112,7 +112,7 @@ const Contact = () => {
 
   const contactCards = [
     { icon: <FaMapMarkerAlt />, title: 'Office Address', line1: 'C 4242 Sector 12', line2: 'Rajajipuram Lucknow 226017' },
-    { icon: <FaEnvelope />, title: 'Email Us', line1: 'Editor@praxis.org.in', line2: '' },
+    { icon: <FaEnvelope />, title: 'Email Us', line1: 'editor@praxis.org.in', line2: '' },
     { icon: <FaPhoneAlt />, title: 'Call Us', line1: '+91 80817 16983', line2: '' },
     { icon: <FaClock />, title: 'Office Hours', line1: 'Monday – Friday', line2: '09:00 AM – 05:00 PM' },
   ];
@@ -293,7 +293,7 @@ const Contact = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Need Immediate Assistance?</h2>
               <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">Our dedicated support team is available during office hours to answer your queries regarding paper submission, peer review status, or general technical issues.</p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="mailto:Editor@praxis.org.in" className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold py-3.5 px-8 rounded-xl shadow-md hover:bg-gray-50 transition-colors">
+                <a href="mailto:editor@praxis.org.in" className="inline-flex items-center justify-center gap-2 bg-white text-primary font-bold py-3.5 px-8 rounded-xl shadow-md hover:bg-gray-50 transition-colors">
                   <FaEnvelope /> Email Us
                 </a>
                 <a href="tel:+918081716983" className="inline-flex items-center justify-center gap-2 bg-primary-dark text-white border border-white/20 font-bold py-3.5 px-8 rounded-xl hover:bg-white/10 transition-colors">

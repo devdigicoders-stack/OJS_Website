@@ -169,8 +169,8 @@ const AnnouncementDetails = () => {
             <h3 className="text-xl font-bold text-text mb-2">Have any questions?</h3>
             <p className="text-light-text mb-6">Our support team is here to help you regarding this announcement.</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="mailto:Editor@praxis.org.in" className="inline-flex items-center justify-center gap-2 bg-gray-50 text-text font-bold py-3 px-6 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-all">
-                <FaEnvelope /> Editor@praxis.org.in
+              <a href="mailto:editor@praxis.org.in" className="inline-flex items-center justify-center gap-2 bg-gray-50 text-text font-bold py-3 px-6 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-all">
+                <FaEnvelope /> editor@praxis.org.in
               </a>
               <a href="tel:+918081716983" className="inline-flex items-center justify-center gap-2 bg-gray-50 text-text font-bold py-3 px-6 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-all">
                 <FaPhoneAlt /> +91 80817 16983
