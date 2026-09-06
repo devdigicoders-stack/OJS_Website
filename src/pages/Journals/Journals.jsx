@@ -198,7 +198,7 @@ const Journals = () => {
 
                       {/* Cover Image */}
                       <div className={`${viewMode === 'list' ? 'sm:w-1/3 sm:h-auto' : 'w-full'} h-48 overflow-hidden relative shrink-0 bg-gray-100 flex items-center justify-center`}>
-                        <img src={journal.image ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <img src={journal.image ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                         
                         {/* DOI Badge on Image bottom */}

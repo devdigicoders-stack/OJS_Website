@@ -424,7 +424,7 @@ const Home = () => {
                 >
                   <div className="relative h-44 overflow-hidden rounded-t-xl">
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent z-10"></div>
-                    <img src={journal.coverImage ? `${import.meta.env.VITE_API_URL.replace('/api', '')}${journal.coverImage}` : "https://via.placeholder.com/400x300"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <img src={journal.coverImage ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}${journal.coverImage}` : "https://via.placeholder.com/400x300"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-primary text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm z-20">
                       {journal.researchArea || 'Journal'}
                     </div>

@@ -27,6 +27,19 @@ const ScrollReveal = ({ children, delay = 0, direction = "up", width = "100%" })
   );
 };
 
+const formatImageUrl = (url) => {
+  if (!url) return '';
+  let cleaned = url.trim();
+  cleaned = cleaned.replace(/^https?:\/\/\.praxis\.org\.in(\/api)?/, 'https://api.praxis.org.in');
+  cleaned = cleaned.replace('/api/uploads/', '/uploads/');
+  const backendBase = (import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '');
+  cleaned = cleaned.replace(/^http:\/\/(localhost|127\.0\.0\.1):5000/, backendBase);
+  if (cleaned.startsWith('/uploads')) {
+    cleaned = `${backendBase}${cleaned}`;
+  }
+  return cleaned;
+};
+
 const About = () => {
   const [aboutData, setAboutData] = useState({
     introduction: '<p>The Praxis Journal of Society, Behaviour and Institutional Studies is a premier international publishing house established with the core purpose of bridging the gap between rigorous academic research and real-world application.</p><p>We publish cutting-edge, peer-reviewed research across multiple disciplines including Technology, Medicine, Arts, and Sciences, providing a robust platform for researchers worldwide to share their innovative discoveries.</p>',
@@ -271,7 +284,7 @@ const About = () => {
               <ScrollReveal key={i} delay={i * 0.1}>
                 <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
                   <div className="h-64 overflow-hidden relative">
-                    <img src={member.img || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
+                    <img src={formatImageUrl(member.img) || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                   <div className="p-6 text-center bg-white border border-t-0 border-gray-100 rounded-b-2xl">

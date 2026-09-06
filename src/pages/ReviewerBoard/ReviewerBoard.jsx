@@ -3,6 +3,23 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaUserCheck, FaUsers } from 'react-icons/fa';
 
+const formatImageUrl = (url) => {
+  if (!url) return '';
+  let cleaned = url.trim();
+  // Fix corrupted "https://.praxis.org.in" or "http://.praxis.org.in"
+  cleaned = cleaned.replace(/^https?:\/\/\.praxis\.org\.in(\/api)?/, 'https://api.praxis.org.in');
+  // If it has /api/uploads/, change to /uploads/
+  cleaned = cleaned.replace('/api/uploads/', '/uploads/');
+  // If it's pointing to localhost, replace with backend URL
+  const backendBase = (import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '');
+  cleaned = cleaned.replace(/^http:\/\/(localhost|127\.0\.0\.1):5000/, backendBase);
+  // If it's a relative path like /uploads/...
+  if (cleaned.startsWith('/uploads')) {
+    cleaned = `${backendBase}${cleaned}`;
+  }
+  return cleaned;
+};
+
 const ReviewerBoard = () => {
   const [team, setTeam] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,29 +86,42 @@ const ReviewerBoard = () => {
               <div className="text-center text-gray-500 py-10">No reviewer board members found.</div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {team.map((member, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border border-gray-100"
-                  >
-                    <div className="h-64 overflow-hidden relative bg-gray-100 flex items-center justify-center text-gray-400">
-                      {member.img ? (
-                        <img src={member.img} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
-                      ) : (
-                        <FaUsers className="text-6xl opacity-30" />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    </div>
-                    <div className="p-6 text-center">
-                      <h3 className="text-xl font-bold text-text mb-1">{member.name}</h3>
-                      <p className="text-primary font-semibold text-sm">{member.role}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                {team.map((member, i) => {
+                  const finalImgSrc = formatImageUrl(member.img);
+                  return (
+                    <motion.div 
+                      key={i} 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border border-gray-100"
+                    >
+                      <div className="h-64 overflow-hidden relative bg-gray-100 flex items-center justify-center text-gray-400">
+                        {finalImgSrc ? (
+                          <img 
+                            src={finalImgSrc} 
+                            alt={member.name} 
+                            className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              if (e.currentTarget.nextElementSibling) {
+                                e.currentTarget.nextElementSibling.style.display = 'block';
+                              }
+                            }}
+                          />
+                        ) : (
+                          <FaUsers className="text-6xl opacity-30" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                      <div className="p-6 text-center">
+                        <h3 className="text-xl font-bold text-text mb-1">{member.name}</h3>
+                        <p className="text-primary font-semibold text-sm">{member.role}</p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </>

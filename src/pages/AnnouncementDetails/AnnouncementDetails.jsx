@@ -104,7 +104,7 @@ const AnnouncementDetails = () => {
             {announcement.mediaPath && announcement.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) && (
               <div className="w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden mb-10 shadow-md">
                 <img 
-                  src={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${announcement.mediaPath.replace(/\\/g, '/')}`}
+                  src={`${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${announcement.mediaPath.replace(/\\/g, '/')}`}
                   alt={announcement.title} 
                   className="w-full h-full object-cover"
                 />
@@ -148,7 +148,7 @@ const AnnouncementDetails = () => {
                 </button>
                 {announcement.mediaPath && !announcement.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) && (
                   <a 
-                    href={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${announcement.mediaPath.replace(/\\/g, '/')}`}
+                    href={`${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${announcement.mediaPath.replace(/\\/g, '/')}`}
                     target="_blank" rel="noreferrer"
                     className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-md"
                   >

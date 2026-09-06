@@ -82,14 +82,14 @@ const JournalDetails = () => {
                 <div className="absolute top-4 left-4 z-10 flex gap-2">
                   <span className="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-sm">PUBLISHED</span>
                 </div>
-                <img src={journal.image ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-auto aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-100" />
+                <img src={journal.image ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-auto aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-100" />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
               </motion.div>
               
               {/* Action Buttons (Desktop Sidebar) */}
               <div className="hidden lg:flex flex-col gap-3 mt-6">
                 {journal.mainFilePath && (
-                <a href={`http://localhost:5000/${journal.mainFilePath}`} target="_blank" rel="noreferrer" className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold py-3.5 rounded-xl transition-colors border border-red-100 shadow-sm">
+                <a href={`${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${journal.mainFilePath.replace(/\\/g, '/')}`} target="_blank" rel="noreferrer" className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold py-3.5 rounded-xl transition-colors border border-red-100 shadow-sm">
                   <FaFilePdf size={18} /> Download Full PDF
                 </a>
                 )}
@@ -223,7 +223,7 @@ const JournalDetails = () => {
             {relatedJournals.map(related => (
               <div key={related._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all overflow-hidden group flex flex-col h-full">
                 <div className="h-40 overflow-hidden relative shrink-0 bg-gray-100 flex items-center justify-center">
-                  <img src={related.image ? `${import.meta.env.VITE_API_URL.replace('/api', '')}/${related.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={related.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <img src={related.image ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${related.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={related.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                   <div className="absolute bottom-3 left-3 bg-primary/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
                     {related.department}

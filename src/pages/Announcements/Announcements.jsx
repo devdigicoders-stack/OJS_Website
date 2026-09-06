@@ -175,7 +175,7 @@ const Announcements = () => {
                       <div className="mb-4 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 flex justify-center items-center">
                         {item.mediaPath.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/) ? (
                           <img 
-                            src={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${item.mediaPath.replace(/\\/g, '/')}`} 
+                            src={`${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${item.mediaPath.replace(/\\/g, '/')}`} 
                             alt={item.title} 
                             className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
                           />
@@ -186,7 +186,7 @@ const Announcements = () => {
                               <span className="text-sm font-semibold text-text truncate">Attachment Document</span>
                             </div>
                             <a 
-                              href={`${import.meta.env.VITE_API_URL.replace('/api', '')}/${item.mediaPath.replace(/\\/g, '/')}`}
+                              href={`${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${item.mediaPath.replace(/\\/g, '/')}`}
                               target="_blank" rel="noreferrer"
                               className="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded shadow-sm hover:bg-accent transition-colors"
                             >
