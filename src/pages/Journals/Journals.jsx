@@ -31,7 +31,10 @@ const Journals = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeDept, setActiveDept] = useState('All');
+  const [selectedYear, setSelectedYear] = useState('All');
+  const [sortBy, setSortBy] = useState('Latest First');
   const [dynamicDepartments, setDynamicDepartments] = useState([]);
+  const [dynamicYears, setDynamicYears] = useState([]);
   
   const [journalsList, setJournalsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -47,6 +50,13 @@ const Journals = () => {
           // Compute unique departments
           const depts = Array.from(new Set(data.map(j => j.department))).filter(Boolean);
           setDynamicDepartments(depts.map((d, i) => ({ id: i, name: d })));
+
+          // Compute unique years
+          const years = Array.from(new Set(data.map(j => {
+            const dateStr = j.publishDate || j.createdAt || j.updatedAt;
+            return dateStr ? new Date(dateStr).getFullYear().toString() : null;
+          }))).filter(Boolean).sort((a, b) => b - a);
+          setDynamicYears(years);
         }
       } catch (error) {
         console.error('Error fetching journals:', error);
@@ -57,12 +67,53 @@ const Journals = () => {
     fetchJournals();
   }, []);
 
-  // Simple filtering
-  const filteredJournals = journalsList.filter(journal => 
-    (activeDept === 'All' || journal.department === activeDept) &&
-    (journal.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-     (journal.keywords && journal.keywords.some(k => typeof k === 'string' && k.toLowerCase().includes(searchTerm.toLowerCase()))))
-  );
+  // Filtering & Sorting logic
+  const filteredJournals = journalsList
+    .filter(journal => {
+      // Department match
+      const deptMatch = activeDept === 'All' || journal.department === activeDept;
+      
+      // Search match
+      const searchLower = searchTerm.toLowerCase();
+      const titleMatch = journal.title?.toLowerCase().includes(searchLower);
+      const kwMatch = journal.keywords && journal.keywords.some(k => typeof k === 'string' && k.toLowerCase().includes(searchLower));
+      const authorMatch = (journal.primaryAuthorName || journal.primaryAuthorId?.name || '').toLowerCase().includes(searchLower);
+      const searchMatch = !searchTerm || titleMatch || kwMatch || authorMatch;
+
+      // Year match
+      const journalYear = (journal.publishDate || journal.createdAt || journal.updatedAt) 
+        ? new Date(journal.publishDate || journal.createdAt || journal.updatedAt).getFullYear().toString() 
+        : '';
+      const yearMatch = selectedYear === 'All' || journalYear === selectedYear;
+
+      return deptMatch && searchMatch && yearMatch;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'Latest First') {
+        const dateA = new Date(a.publishDate || a.createdAt || 0);
+        const dateB = new Date(b.publishDate || b.createdAt || 0);
+        return dateB - dateA;
+      }
+      if (sortBy === 'Oldest First') {
+        const dateA = new Date(a.publishDate || a.createdAt || 0);
+        const dateB = new Date(b.publishDate || b.createdAt || 0);
+        return dateA - dateB;
+      }
+      if (sortBy === 'A-Z') {
+        return (a.title || '').localeCompare(b.title || '');
+      }
+      if (sortBy === 'Z-A') {
+        return (b.title || '').localeCompare(a.title || '');
+      }
+      return 0;
+    });
+
+  const handleResetFilters = () => {
+    setActiveDept('All');
+    setSelectedYear('All');
+    setSortBy('Latest First');
+    setSearchTerm('');
+  };
 
   return (
     <div className="bg-background min-h-screen pb-20">
@@ -96,8 +147,18 @@ const Journals = () => {
           {/* Left Sidebar Filters */}
           <div className="lg:w-1/4 shrink-0 space-y-6">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-28">
-              <div className="flex items-center gap-2 mb-6 text-primary font-bold text-lg border-b border-gray-100 pb-4">
-                <FaFilter /> Filters
+              <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
+                <div className="flex items-center gap-2 text-primary font-bold text-lg">
+                  <FaFilter /> Filters
+                </div>
+                {(activeDept !== 'All' || selectedYear !== 'All' || sortBy !== 'Latest First' || searchTerm) && (
+                  <button 
+                    onClick={handleResetFilters}
+                    className="text-xs text-red-500 hover:text-red-700 font-semibold transition-colors"
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
               
               <div className="space-y-6">
@@ -124,21 +185,37 @@ const Journals = () => {
 
                 <div>
                   <h4 className="font-bold text-text mb-3 text-sm uppercase tracking-wider">Publication Year</h4>
-                  <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary text-text">
-                    <option>All Years</option>
-                    <option>2026</option>
-                    <option>2025</option>
-                    <option>2024</option>
+                  <select 
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary text-text cursor-pointer"
+                  >
+                    <option value="All">All Years</option>
+                    {dynamicYears.length > 0 ? (
+                      dynamicYears.map(yr => (
+                        <option key={yr} value={yr}>{yr}</option>
+                      ))
+                    ) : (
+                      <>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                      </>
+                    )}
                   </select>
                 </div>
                 
                 <div>
                   <h4 className="font-bold text-text mb-3 text-sm uppercase tracking-wider">Sort By</h4>
-                  <select className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary text-text">
-                    <option>Latest First</option>
-                    <option>Oldest First</option>
-                    <option>A-Z</option>
-                    <option>Most Downloaded</option>
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary text-text cursor-pointer"
+                  >
+                    <option value="Latest First">Latest First</option>
+                    <option value="Oldest First">Oldest First</option>
+                    <option value="A-Z">A-Z (Title)</option>
+                    <option value="Z-A">Z-A (Title)</option>
                   </select>
                 </div>
               </div>
@@ -296,7 +373,13 @@ const Journals = () => {
               <div className="text-center py-20 bg-white rounded-2xl border border-gray-100">
                 <FaBookOpen className="text-6xl text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-text mb-2">No Journals Found</h3>
-                <p className="text-light-text">Try adjusting your search or filters.</p>
+                <p className="text-light-text mb-4">Try adjusting your search or filters.</p>
+                <button 
+                  onClick={handleResetFilters}
+                  className="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary/90 transition-all shadow-sm"
+                >
+                  Clear all filters
+                </button>
               </div>
             )}
 
