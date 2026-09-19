@@ -57,14 +57,23 @@ const About = () => {
       { title: 'Indexed Articles', icon: 'FaCheckCircle' }
     ],
     researchAreas: [
+      { name: 'Sociology', icon: 'FaBook' },
+      { name: 'Political Science', icon: 'FaUniversity' },
+      { name: 'Psychology', icon: 'FaBrain' },
+      { name: 'Economics', icon: 'FaChartLine' },
+      { name: 'Governance and Public Administration', icon: 'FaBuilding' },
+      { name: 'Criminology', icon: 'FaShieldAlt' },
+      { name: 'Anthropology', icon: 'FaGlobe' },
+      { name: 'Education', icon: 'FaGraduationCap' },
+      { name: 'Management', icon: 'FaBriefcase' },
+      { name: 'Commerce', icon: 'FaChartBar' },
+      { name: 'Geography', icon: 'FaMapMarkedAlt' },
+      { name: 'Law', icon: 'FaGavel' },
+      { name: 'Social Work', icon: 'FaHandsHelping' },
+      { name: 'Gender Studies', icon: 'FaUsers' },
       { name: 'Computer Science', icon: 'FaLaptopCode' },
       { name: 'Engineering', icon: 'FaCogs' },
-      { name: 'Medical Science', icon: 'FaStethoscope' },
-      { name: 'Education', icon: 'FaUniversity' },
-      { name: 'Commerce', icon: 'FaChartLine' },
-      { name: 'Law', icon: 'FaGavel' },
-      { name: 'Arts', icon: 'FaPalette' },
-      { name: 'Agriculture', icon: 'FaSeedling' }
+      { name: 'Other', icon: 'FaCheckCircle' }
     ],
     team: [
       { name: 'Dr. Sarah Jenkins', role: 'Editor-in-Chief', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop' },
