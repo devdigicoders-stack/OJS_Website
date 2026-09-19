@@ -11,6 +11,15 @@ import { useState, useEffect } from 'react';
 import { features, steps } from '../../data/dummyData';
 import { FaLaptopCode, FaCogs, FaStethoscope, FaChartLine, FaBookReader, FaBalanceScale, FaGavel, FaPalette, FaDownload, FaEye, FaArrowRight, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaUserCheck, FaLockOpen, FaLink, FaShippingFast, FaGlobe, FaShieldAlt, FaBook, FaFileAlt, FaChalkboardTeacher, FaUniversity, FaUsers, FaNewspaper, FaPenAlt, FaAward, FaStar, FaCheckCircle, FaFlask, FaAtom } from 'react-icons/fa';
 
+const getFileUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const baseUrl = (import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '');
+  return `${baseUrl}/${path.replace(/\\/g, '/').replace(/^\/+/, '')}`;
+};
+
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800";
+
 const iconMap = {
   // Domain icons (colored white for dark bg)
   FaLaptopCode: <FaLaptopCode size={28} className="text-white mb-2 drop-shadow-md" />,
@@ -424,28 +433,48 @@ const Home = () => {
                 >
                   <div className="relative h-44 overflow-hidden rounded-t-xl">
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent z-10"></div>
-                    <img src={journal.coverImage ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}${journal.coverImage}` : "https://via.placeholder.com/400x300"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <img 
+                      src={getFileUrl(journal.image || journal.coverImage) || DEFAULT_COVER} 
+                      alt={journal.title} 
+                      onError={(e) => { e.currentTarget.src = DEFAULT_COVER; }}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                    />
                     <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-primary text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm z-20">
-                      {journal.researchArea || 'Journal'}
+                      {journal.department || journal.researchArea || 'Journal'}
                     </div>
                     <div className="absolute bottom-3 left-3 right-3 z-20 flex justify-between text-white text-xs font-medium">
-                      <span>{new Date(journal.createdAt).toLocaleDateString()}</span>
-                      <span>Vol {journal.volume || 1}</span>
+                      <span>{journal.publishDate ? new Date(journal.publishDate).toLocaleDateString() : (journal.createdAt ? new Date(journal.createdAt).toLocaleDateString() : 'N/A')}</span>
+                      <span>Vol {journal.volume && journal.volume !== '-' ? journal.volume : 1}</span>
                     </div>
                   </div>
                   <div className="p-5 flex flex-col flex-grow">
                     <h3 className="text-base font-bold font-poppins text-text mb-2 leading-snug line-clamp-2 group-hover:text-primary transition-colors">{journal.title}</h3>
                     <p className="text-xs text-accent font-semibold mb-3 uppercase flex items-center gap-1">
-                      <FaChalkboardTeacher size={12} /> {journal.authors?.map(a => a.name).join(', ') || 'Unknown Author'}
+                      <FaChalkboardTeacher size={12} /> {journal.primaryAuthorName || journal.primaryAuthorId?.name || (journal.authors && journal.authors.map(a => a.name).join(', ')) || 'Unknown Author'}
                     </p>
                     <p className="text-light-text text-xs mb-5 line-clamp-3 flex-grow">{journal.abstract}</p>
                     <div className="flex gap-2 mt-auto pt-4 border-t border-gray-50">
                       <Link to={`/journals/${journal._id}`} className="flex-1 text-center text-xs py-2 bg-gray-50 hover:bg-primary hover:text-white rounded-lg text-text font-medium transition-colors flex items-center justify-center gap-1">
                         <FaEye /> View
                       </Link>
-                      <button className="flex-1 bg-primary/10 hover:bg-primary text-primary hover:text-white font-medium text-center text-xs py-2 rounded-lg transition-colors flex items-center justify-center gap-1 group/btn">
-                        <FaDownload className="group-hover/btn:-translate-y-0.5 transition-transform" /> PDF
-                      </button>
+                      {journal.mainFilePath ? (
+                        <a 
+                          href={getFileUrl(journal.mainFilePath)} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          download
+                          className="flex-1 bg-primary/10 hover:bg-primary text-primary hover:text-white font-medium text-center text-xs py-2 rounded-lg transition-colors flex items-center justify-center gap-1 group/btn"
+                        >
+                          <FaDownload className="group-hover/btn:-translate-y-0.5 transition-transform" /> PDF
+                        </a>
+                      ) : (
+                        <Link 
+                          to={`/journals/${journal._id}`}
+                          className="flex-1 bg-primary/10 hover:bg-primary text-primary hover:text-white font-medium text-center text-xs py-2 rounded-lg transition-colors flex items-center justify-center gap-1 group/btn"
+                        >
+                          <FaDownload className="group-hover/btn:-translate-y-0.5 transition-transform" /> PDF
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </motion.div>

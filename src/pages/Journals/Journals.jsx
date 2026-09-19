@@ -18,6 +18,15 @@ const ScrollReveal = ({ children, delay = 0 }) => (
   </motion.div>
 );
 
+const getFileUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const baseUrl = (import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '');
+  return `${baseUrl}/${path.replace(/\\/g, '/').replace(/^\/+/, '')}`;
+};
+
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800";
+
 const Journals = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,7 +39,8 @@ const Journals = () => {
   React.useEffect(() => {
     const fetchJournals = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/journals/public');
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api';
+        const res = await fetch(`${apiUrl}/journals/public`);
         if (res.ok) {
           const data = await res.json();
           setJournalsList(data);
@@ -198,7 +208,12 @@ const Journals = () => {
 
                       {/* Cover Image */}
                       <div className={`${viewMode === 'list' ? 'sm:w-1/3 sm:h-auto' : 'w-full'} h-48 overflow-hidden relative shrink-0 bg-gray-100 flex items-center justify-center`}>
-                        <img src={journal.image ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                        <img 
+                          src={getFileUrl(journal.image || journal.coverImage) || DEFAULT_COVER} 
+                          alt={journal.title} 
+                          onError={(e) => { e.currentTarget.src = DEFAULT_COVER; }}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                         
                         {/* DOI Badge on Image bottom */}
@@ -223,7 +238,7 @@ const Journals = () => {
                         <div className="space-y-2 mb-4">
                           <div className="flex items-center gap-2 text-sm text-light-text">
                             <FaUserGraduate className="text-primary/70 shrink-0" /> 
-                            <span className="truncate font-medium">{journal.primaryAuthorName || 'Unknown Author'}</span>
+                            <span className="truncate font-medium">{journal.primaryAuthorName || journal.primaryAuthorId?.name || 'Unknown Author'}</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-light-text">
                             <FaCalendarAlt className="text-primary/70 shrink-0" /> 
@@ -252,7 +267,7 @@ const Journals = () => {
                             <FaEye /> Details
                           </Link>
                           {journal.mainFilePath && (
-                          <a href={`http://localhost:5000/${journal.mainFilePath}`} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 text-sm font-bold py-2 rounded-lg transition-colors border border-red-100 hover:border-red-600">
+                          <a href={getFileUrl(journal.mainFilePath)} target="_blank" rel="noopener noreferrer" download className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 text-sm font-bold py-2 rounded-lg transition-colors border border-red-100 hover:border-red-600">
                             <FaFilePdf /> PDF
                           </a>
                           )}

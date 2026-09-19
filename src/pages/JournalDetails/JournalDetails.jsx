@@ -7,6 +7,15 @@ import {
   FaBookOpen, FaGlobeAmericas, FaEye
 } from 'react-icons/fa';
 
+const getFileUrl = (path) => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const baseUrl = (import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '');
+  return `${baseUrl}/${path.replace(/\\/g, '/').replace(/^\/+/, '')}`;
+};
+
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800";
+
 const JournalDetails = () => {
   const { id } = useParams();
   
@@ -19,7 +28,8 @@ const JournalDetails = () => {
     const fetchJournalDetails = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/journals/public/${id}`);
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api';
+        const res = await fetch(`${apiUrl}/journals/public/${id}`);
         if (res.ok) {
           const data = await res.json();
           setJournal(data);
@@ -28,7 +38,7 @@ const JournalDetails = () => {
         }
         
         // Fetch related journals (just fetching all and filtering)
-        const allRes = await fetch('http://localhost:5000/api/journals/public');
+        const allRes = await fetch(`${apiUrl}/journals/public`);
         if (allRes.ok) {
           const allData = await allRes.json();
           setRelatedJournals(allData.filter(j => j._id !== id).slice(0, 3));
@@ -82,14 +92,19 @@ const JournalDetails = () => {
                 <div className="absolute top-4 left-4 z-10 flex gap-2">
                   <span className="bg-green-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-sm">PUBLISHED</span>
                 </div>
-                <img src={journal.image ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${journal.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={journal.title} className="w-full h-auto aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-100" />
+                <img 
+                  src={getFileUrl(journal.image || journal.coverImage) || DEFAULT_COVER} 
+                  alt={journal.title} 
+                  onError={(e) => { e.currentTarget.src = DEFAULT_COVER; }}
+                  className="w-full h-auto aspect-[3/4] object-cover group-hover:scale-105 transition-transform duration-700 bg-gray-100" 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
               </motion.div>
               
               {/* Action Buttons (Desktop Sidebar) */}
               <div className="hidden lg:flex flex-col gap-3 mt-6">
                 {journal.mainFilePath && (
-                <a href={`${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${journal.mainFilePath.replace(/\\/g, '/')}`} target="_blank" rel="noreferrer" className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold py-3.5 rounded-xl transition-colors border border-red-100 shadow-sm">
+                <a href={getFileUrl(journal.mainFilePath)} target="_blank" rel="noopener noreferrer" download className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold py-3.5 rounded-xl transition-colors border border-red-100 shadow-sm">
                   <FaFilePdf size={18} /> Download Full PDF
                 </a>
                 )}
@@ -194,7 +209,7 @@ const JournalDetails = () => {
                 {/* Mobile Action Buttons */}
                 <div className="lg:hidden flex flex-col gap-3 mt-10">
                   {journal.mainFilePath && (
-                  <a href={`http://localhost:5000/${journal.mainFilePath}`} target="_blank" rel="noreferrer" className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold py-3.5 rounded-xl transition-colors border border-red-100 shadow-sm">
+                  <a href={getFileUrl(journal.mainFilePath)} target="_blank" rel="noopener noreferrer" download className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-600 font-bold py-3.5 rounded-xl transition-colors border border-red-100 shadow-sm">
                     <FaFilePdf size={18} /> Download Full PDF
                   </a>
                   )}
@@ -223,7 +238,12 @@ const JournalDetails = () => {
             {relatedJournals.map(related => (
               <div key={related._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all overflow-hidden group flex flex-col h-full">
                 <div className="h-40 overflow-hidden relative shrink-0 bg-gray-100 flex items-center justify-center">
-                  <img src={related.image ? `${(import.meta.env.VITE_API_URL || 'https://api.praxis.org.in/api').replace(/\/api\/?$/, '')}/${related.image.replace(/\\/g, '/')}` : "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800"} alt={related.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <img 
+                    src={getFileUrl(related.image || related.coverImage) || DEFAULT_COVER} 
+                    alt={related.title} 
+                    onError={(e) => { e.currentTarget.src = DEFAULT_COVER; }}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                   <div className="absolute bottom-3 left-3 bg-primary/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
                     {related.department}
@@ -233,7 +253,7 @@ const JournalDetails = () => {
                   <h4 className="font-bold text-text mb-2 line-clamp-2 hover:text-primary transition-colors">
                     <Link to={`/journals/${related._id}`}>{related.title}</Link>
                   </h4>
-                  <p className="text-xs text-light-text mb-4">{related.primaryAuthorName || 'Unknown'} • {new Date(related.publishDate).toLocaleDateString()}</p>
+                  <p className="text-xs text-light-text mb-4">{related.primaryAuthorName || related.primaryAuthorId?.name || 'Unknown'} • {new Date(related.publishDate || related.createdAt).toLocaleDateString()}</p>
                   <div className="mt-auto border-t border-gray-100 pt-3">
                     <Link to={`/journals/${related._id}`} className="text-primary text-sm font-bold flex items-center gap-1 hover:text-accent transition-colors">
                       <FaEye /> View Details
