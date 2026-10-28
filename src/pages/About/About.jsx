@@ -5,7 +5,8 @@ import {
   FaBookOpen, FaGlobeAmericas, FaAward, FaUsers, FaUniversity, 
   FaCheckCircle, FaLock, FaBolt, FaFileAlt, FaBalanceScale, 
   FaLaptopCode, FaStethoscope, FaGavel, FaPalette, FaSeedling,
-  FaCogs, FaChartLine, FaChevronDown, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt
+  FaCogs, FaChartLine, FaChevronDown, FaMapMarkerAlt, FaEnvelope, FaPhoneAlt,
+  FaExternalLinkAlt
 } from 'react-icons/fa';
 
 // Shared animation wrapper
@@ -289,20 +290,68 @@ const About = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {aboutData.team.map((member, i) => (
-              <ScrollReveal key={i} delay={i * 0.1}>
-                <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
-                  <div className="h-64 overflow-hidden relative">
-                    <img src={formatImageUrl(member.img) || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            {aboutData.team.map((member, i) => {
+              const profileUrl = member.universityUrl 
+                ? (member.universityUrl.startsWith('http') ? member.universityUrl : `https://${member.universityUrl}`)
+                : null;
+
+              return (
+                <ScrollReveal key={i} delay={i * 0.1}>
+                  <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between h-full">
+                    <div>
+                      {profileUrl ? (
+                        <a 
+                          href={profileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block h-64 overflow-hidden relative"
+                        >
+                          <img src={formatImageUrl(member.img) || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                            <span className="text-white text-xs font-medium bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm flex items-center gap-1.5">
+                              Visit Profile <FaExternalLinkAlt className="text-[10px]" />
+                            </span>
+                          </div>
+                        </a>
+                      ) : (
+                        <div className="h-64 overflow-hidden relative">
+                          <img src={formatImageUrl(member.img) || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                      )}
+                      <div className="p-6 text-center bg-white border border-t-0 border-gray-100">
+                        {profileUrl ? (
+                          <a 
+                            href={profileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors inline-block"
+                          >
+                            <h3 className="text-xl font-bold text-text mb-1 hover:text-primary transition-colors">{member.name}</h3>
+                          </a>
+                        ) : (
+                          <h3 className="text-xl font-bold text-text mb-1">{member.name}</h3>
+                        )}
+                        <p className="text-primary font-semibold text-sm leading-relaxed">{member.role}</p>
+                      </div>
+                    </div>
+                    {profileUrl && (
+                      <div className="p-4 bg-white border border-t-0 border-gray-100 rounded-b-2xl pt-0 text-center">
+                        <a
+                          href={profileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-3 text-xs font-semibold text-primary bg-primary/5 hover:bg-primary hover:text-white rounded-lg transition-all duration-200 border border-primary/20"
+                        >
+                          <FaExternalLinkAlt className="text-[10px]" />
+                          <span>University Link</span>
+                        </a>
+                      </div>
+                    )}
                   </div>
-                  <div className="p-6 text-center bg-white border border-t-0 border-gray-100 rounded-b-2xl">
-                    <h3 className="text-xl font-bold text-text mb-1">{member.name}</h3>
-                    <p className="text-primary font-semibold text-sm">{member.role}</p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>
