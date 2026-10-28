@@ -162,7 +162,15 @@ const JournalDetails = () => {
                     <div className="p-2 bg-white rounded-lg text-accent shadow-sm"><FaBookOpen /></div>
                     <div>
                       <p className="text-xs text-light-text font-bold uppercase tracking-wider mb-0.5">Volume & Issue</p>
-                      <p className="text-sm font-semibold text-text">Vol {journal.volume !== '-' ? journal.volume : '1'}, Issue {journal.issue !== '-' ? journal.issue : '1'}</p>
+                      <p className="text-sm font-semibold text-text">
+                        Vol {journal.volume && journal.volume !== '-' ? journal.volume.toString().replace(/^vol\.?\s*/i, '') : '1'}, Issue {journal.issue && journal.issue !== '-' ? journal.issue.toString().replace(/^issue\s*/i, '') : '1'}
+                        {(() => {
+                          const m = journal.publicationMonth || (journal.publishDate ? new Date(journal.publishDate).toLocaleString('default', { month: 'long' }) : '');
+                          const y = journal.publicationYear || (journal.publishDate ? new Date(journal.publishDate).getFullYear().toString() : '');
+                          const str = [m, y].filter(Boolean).join(' ');
+                          return str ? ` (${str})` : '';
+                        })()}
+                      </p>
                     </div>
                   </div>
                 </div>

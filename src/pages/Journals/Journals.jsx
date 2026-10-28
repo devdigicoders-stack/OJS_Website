@@ -32,9 +32,14 @@ const Journals = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeDept, setActiveDept] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
+  const [selectedMonth, setSelectedMonth] = useState('All');
+  const [selectedVolume, setSelectedVolume] = useState('All');
+  const [selectedIssue, setSelectedIssue] = useState('All');
   const [sortBy, setSortBy] = useState('Latest First');
   const [dynamicDepartments, setDynamicDepartments] = useState([]);
   const [dynamicYears, setDynamicYears] = useState([]);
+  const [dynamicVolumes, setDynamicVolumes] = useState([]);
+  const [dynamicIssues, setDynamicIssues] = useState([]);
   
   const [journalsList, setJournalsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -53,10 +58,25 @@ const Journals = () => {
 
           // Compute unique years
           const years = Array.from(new Set(data.map(j => {
+            if (j.publicationYear) return j.publicationYear.toString().trim();
             const dateStr = j.publishDate || j.createdAt || j.updatedAt;
             return dateStr ? new Date(dateStr).getFullYear().toString() : null;
           }))).filter(Boolean).sort((a, b) => b - a);
           setDynamicYears(years);
+
+          // Compute unique volumes
+          const vols = Array.from(new Set(data.map(j => {
+            if (!j.volume || j.volume === '-') return null;
+            return j.volume.toString().trim();
+          }))).filter(Boolean).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+          setDynamicVolumes(vols);
+
+          // Compute unique issues
+          const iss = Array.from(new Set(data.map(j => {
+            if (!j.issue || j.issue === '-') return null;
+            return j.issue.toString().trim();
+          }))).filter(Boolean).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+          setDynamicIssues(iss);
         }
       } catch (error) {
         console.error('Error fetching journals:', error);
@@ -66,6 +86,11 @@ const Journals = () => {
     };
     fetchJournals();
   }, []);
+
+  const MONTHS_LIST = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
   // Filtering & Sorting logic
   const filteredJournals = journalsList
@@ -81,12 +106,32 @@ const Journals = () => {
       const searchMatch = !searchTerm || titleMatch || kwMatch || authorMatch;
 
       // Year match
-      const journalYear = (journal.publishDate || journal.createdAt || journal.updatedAt) 
-        ? new Date(journal.publishDate || journal.createdAt || journal.updatedAt).getFullYear().toString() 
-        : '';
+      const journalYear = journal.publicationYear 
+        ? journal.publicationYear.toString().trim()
+        : ((journal.publishDate || journal.createdAt || journal.updatedAt) 
+            ? new Date(journal.publishDate || journal.createdAt || journal.updatedAt).getFullYear().toString() 
+            : '');
       const yearMatch = selectedYear === 'All' || journalYear === selectedYear;
 
-      return deptMatch && searchMatch && yearMatch;
+      // Month match
+      const journalMonth = journal.publicationMonth 
+        ? journal.publicationMonth.toString().trim().toLowerCase()
+        : ((journal.publishDate || journal.createdAt) 
+            ? new Date(journal.publishDate || journal.createdAt).toLocaleString('default', { month: 'long' }).toLowerCase() 
+            : '');
+      const monthMatch = selectedMonth === 'All' || journalMonth.includes(selectedMonth.toLowerCase());
+
+      // Volume match
+      const jVol = (journal.volume || '').toString().toLowerCase().replace(/^vol\.?\s*/i, '').trim();
+      const sVol = selectedVolume.toLowerCase().replace(/^vol\.?\s*/i, '').trim();
+      const volMatch = selectedVolume === 'All' || jVol === sVol || (journal.volume && journal.volume.toString().trim() === selectedVolume);
+
+      // Issue match
+      const jIss = (journal.issue || '').toString().toLowerCase().replace(/^issue\s*/i, '').trim();
+      const sIss = selectedIssue.toLowerCase().replace(/^issue\s*/i, '').trim();
+      const issueMatch = selectedIssue === 'All' || jIss === sIss || (journal.issue && journal.issue.toString().trim() === selectedIssue);
+
+      return deptMatch && searchMatch && yearMatch && monthMatch && volMatch && issueMatch;
     })
     .sort((a, b) => {
       if (sortBy === 'Latest First') {
@@ -111,6 +156,9 @@ const Journals = () => {
   const handleResetFilters = () => {
     setActiveDept('All');
     setSelectedYear('All');
+    setSelectedMonth('All');
+    setSelectedVolume('All');
+    setSelectedIssue('All');
     setSortBy('Latest First');
     setSearchTerm('');
   };
@@ -151,7 +199,7 @@ const Journals = () => {
                 <div className="flex items-center gap-2 text-primary font-bold text-lg">
                   <FaFilter /> Filters
                 </div>
-                {(activeDept !== 'All' || selectedYear !== 'All' || sortBy !== 'Latest First' || searchTerm) && (
+                {(activeDept !== 'All' || selectedYear !== 'All' || selectedMonth !== 'All' || selectedVolume !== 'All' || selectedIssue !== 'All' || sortBy !== 'Latest First' || searchTerm) && (
                   <button 
                     onClick={handleResetFilters}
                     className="text-xs text-red-500 hover:text-red-700 font-semibold transition-colors"
@@ -161,13 +209,13 @@ const Journals = () => {
                 )}
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <div>
                   <h4 className="font-bold text-text mb-3 text-sm uppercase tracking-wider">Department</h4>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                     <button 
                       onClick={() => setActiveDept('All')}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${activeDept === 'All' ? 'bg-primary/10 text-primary font-bold' : 'text-light-text hover:bg-gray-50'}`}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${activeDept === 'All' ? 'bg-primary/10 text-primary font-bold' : 'text-light-text hover:bg-gray-50'}`}
                     >
                       All Departments
                     </button>
@@ -175,7 +223,7 @@ const Journals = () => {
                       <button 
                         key={dept.id}
                         onClick={() => setActiveDept(dept.name)}
-                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${activeDept === dept.name ? 'bg-primary/10 text-primary font-bold' : 'text-light-text hover:bg-gray-50'}`}
+                        className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${activeDept === dept.name ? 'bg-primary/10 text-primary font-bold' : 'text-light-text hover:bg-gray-50'}`}
                       >
                         {dept.name}
                       </button>
@@ -183,8 +231,54 @@ const Journals = () => {
                   </div>
                 </div>
 
+                {/* Volume & Issue Filter */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <h4 className="font-bold text-text mb-2 text-xs uppercase tracking-wider">Volume</h4>
+                    <select 
+                      value={selectedVolume}
+                      onChange={(e) => setSelectedVolume(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-2 text-xs focus:outline-none focus:border-primary text-text cursor-pointer"
+                    >
+                      <option value="All">All Vols</option>
+                      {dynamicVolumes.map(v => (
+                        <option key={v} value={v}>{v.toLowerCase().startsWith('vol') ? v : `Vol ${v}`}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-text mb-2 text-xs uppercase tracking-wider">Issue</h4>
+                    <select 
+                      value={selectedIssue}
+                      onChange={(e) => setSelectedIssue(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-2 text-xs focus:outline-none focus:border-primary text-text cursor-pointer"
+                    >
+                      <option value="All">All Issues</option>
+                      {dynamicIssues.map(iss => (
+                        <option key={iss} value={iss}>{iss.toLowerCase().startsWith('issue') ? iss : `Issue ${iss}`}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Publication Month Filter */}
                 <div>
-                  <h4 className="font-bold text-text mb-3 text-sm uppercase tracking-wider">Publication Year</h4>
+                  <h4 className="font-bold text-text mb-2 text-xs uppercase tracking-wider">Publication Month</h4>
+                  <select 
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary text-text cursor-pointer"
+                  >
+                    <option value="All">All Months</option>
+                    {MONTHS_LIST.map(m => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Publication Year Filter */}
+                <div>
+                  <h4 className="font-bold text-text mb-2 text-xs uppercase tracking-wider">Publication Year</h4>
                   <select 
                     value={selectedYear}
                     onChange={(e) => setSelectedYear(e.target.value)}
@@ -206,7 +300,7 @@ const Journals = () => {
                 </div>
                 
                 <div>
-                  <h4 className="font-bold text-text mb-3 text-sm uppercase tracking-wider">Sort By</h4>
+                  <h4 className="font-bold text-text mb-2 text-xs uppercase tracking-wider">Sort By</h4>
                   <select 
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
@@ -321,7 +415,15 @@ const Journals = () => {
                             <FaCalendarAlt className="text-primary/70 shrink-0" /> 
                             <span>{journal.publishDate ? new Date(journal.publishDate).toLocaleDateString() : (journal.updatedAt ? new Date(journal.updatedAt).toLocaleDateString() : 'N/A')}</span>
                             <span className="mx-1">•</span>
-                            <span className="font-semibold text-text">Vol {journal.volume !== '-' ? journal.volume : '1'}, Issue {journal.issue !== '-' ? journal.issue : '1'}</span>
+                            <span className="font-semibold text-text">
+                              Vol {journal.volume && journal.volume !== '-' ? journal.volume.toString().replace(/^vol\.?\s*/i, '') : '1'}, Issue {journal.issue && journal.issue !== '-' ? journal.issue.toString().replace(/^issue\s*/i, '') : '1'}
+                              {(() => {
+                                const m = journal.publicationMonth || (journal.publishDate ? new Date(journal.publishDate).toLocaleString('default', { month: 'short' }) : '');
+                                const y = journal.publicationYear || (journal.publishDate ? new Date(journal.publishDate).getFullYear().toString() : '');
+                                const str = [m, y].filter(Boolean).join(' ');
+                                return str ? ` (${str})` : '';
+                              })()}
+                            </span>
                           </div>
                         </div>
 
