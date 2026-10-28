@@ -25,6 +25,16 @@ const getFileUrl = (path) => {
   return `${baseUrl}/${path.replace(/\\/g, '/').replace(/^\/+/, '')}`;
 };
 
+const cleanVolNumber = (val) => {
+  if (!val || val === '-') return '';
+  return val.toString().replace(/^(vol(ume)?\.?\s*)/i, '').trim();
+};
+
+const cleanIssueNumber = (val) => {
+  if (!val || val === '-') return '';
+  return val.toString().replace(/^(iss(ue)?\.?\s*)/i, '').trim();
+};
+
 const DEFAULT_COVER = "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&q=80&w=800";
 
 const Journals = () => {
@@ -64,18 +74,16 @@ const Journals = () => {
           }))).filter(Boolean).sort((a, b) => b - a);
           setDynamicYears(years);
 
-          // Compute unique volumes
-          const vols = Array.from(new Set(data.map(j => {
-            if (!j.volume || j.volume === '-') return null;
-            return j.volume.toString().trim();
-          }))).filter(Boolean).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+          // Compute unique volumes (normalized)
+          const vols = Array.from(new Set(
+            data.map(j => cleanVolNumber(j.volume)).filter(Boolean)
+          )).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
           setDynamicVolumes(vols);
 
-          // Compute unique issues
-          const iss = Array.from(new Set(data.map(j => {
-            if (!j.issue || j.issue === '-') return null;
-            return j.issue.toString().trim();
-          }))).filter(Boolean).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+          // Compute unique issues (normalized)
+          const iss = Array.from(new Set(
+            data.map(j => cleanIssueNumber(j.issue)).filter(Boolean)
+          )).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
           setDynamicIssues(iss);
         }
       } catch (error) {
@@ -122,14 +130,12 @@ const Journals = () => {
       const monthMatch = selectedMonth === 'All' || journalMonth.includes(selectedMonth.toLowerCase());
 
       // Volume match
-      const jVol = (journal.volume || '').toString().toLowerCase().replace(/^vol\.?\s*/i, '').trim();
-      const sVol = selectedVolume.toLowerCase().replace(/^vol\.?\s*/i, '').trim();
-      const volMatch = selectedVolume === 'All' || jVol === sVol || (journal.volume && journal.volume.toString().trim() === selectedVolume);
+      const journalVolNum = cleanVolNumber(journal.volume);
+      const volMatch = selectedVolume === 'All' || journalVolNum === selectedVolume;
 
       // Issue match
-      const jIss = (journal.issue || '').toString().toLowerCase().replace(/^issue\s*/i, '').trim();
-      const sIss = selectedIssue.toLowerCase().replace(/^issue\s*/i, '').trim();
-      const issueMatch = selectedIssue === 'All' || jIss === sIss || (journal.issue && journal.issue.toString().trim() === selectedIssue);
+      const journalIssueNum = cleanIssueNumber(journal.issue);
+      const issueMatch = selectedIssue === 'All' || journalIssueNum === selectedIssue;
 
       return deptMatch && searchMatch && yearMatch && monthMatch && volMatch && issueMatch;
     })
@@ -242,7 +248,7 @@ const Journals = () => {
                     >
                       <option value="All">All Vols</option>
                       {dynamicVolumes.map(v => (
-                        <option key={v} value={v}>{v.toLowerCase().startsWith('vol') ? v : `Vol ${v}`}</option>
+                        <option key={v} value={v}>Vol {v}</option>
                       ))}
                     </select>
                   </div>
@@ -255,7 +261,7 @@ const Journals = () => {
                     >
                       <option value="All">All Issues</option>
                       {dynamicIssues.map(iss => (
-                        <option key={iss} value={iss}>{iss.toLowerCase().startsWith('issue') ? iss : `Issue ${iss}`}</option>
+                        <option key={iss} value={iss}>Issue {iss}</option>
                       ))}
                     </select>
                   </div>
