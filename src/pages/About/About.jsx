@@ -446,7 +446,7 @@ const About = () => {
                   </div>
                   <div className="bg-gray-50 p-6 rounded-xl border border-gray-100 text-center flex flex-col items-center gap-3">
                     <div className="p-3 bg-white rounded-full shadow-sm text-accent"><FaBookOpen size={24} /></div>
-                    <span className="font-bold text-sm">Valid ISSN</span>
+                    <span className="font-bold text-sm">Valid e-ISSN</span>
                   </div>
                   <div className="bg-gray-50 p-6 rounded-xl border border-gray-100 text-center flex flex-col items-center gap-3">
                     <div className="p-3 bg-white rounded-full shadow-sm text-blue-600"><FaCheckCircle size={24} /></div>

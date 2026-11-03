@@ -215,16 +215,18 @@ const Home = () => {
   const [reviews, setReviews] = useState([]);
   const [journals, setJournals] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
+  const [issn, setIssn] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
-        const [homeRes, journalsRes, annRes, reviewsRes] = await Promise.all([
+        const [homeRes, journalsRes, annRes, reviewsRes, settingsRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/home-page/public`),
           fetch(`${import.meta.env.VITE_API_URL}/journals/public`),
           fetch(`${import.meta.env.VITE_API_URL}/announcements/public`),
-          fetch(`${import.meta.env.VITE_API_URL}/reviews/approved`)
+          fetch(`${import.meta.env.VITE_API_URL}/reviews/approved`),
+          fetch(`${import.meta.env.VITE_API_URL}/settings/public`).catch(() => null)
         ]);
 
         if (homeRes.ok) {
@@ -232,6 +234,11 @@ const Home = () => {
           setStats(homeData.stats || []);
           setDomains(homeData.domains || []);
           setHeroData(homeData.hero || null);
+        }
+
+        if (settingsRes && settingsRes.ok) {
+          const sData = await settingsRes.json();
+          if (sData.issn) setIssn(sData.issn);
         }
 
         if (journalsRes.ok) {
@@ -316,14 +323,35 @@ const Home = () => {
             transition={{ duration: 1, type: "spring", bounce: 0.4 }}
             className="flex flex-col items-center"
           >
+            {/* Accreditation Badges for ISSN & Starting Year */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-3 md:mb-4">
+              <span className="py-1 px-3.5 rounded-full bg-accent text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-lg border border-white/20">
+                e-ISSN{issn ? `: ${issn}` : ''}
+              </span>
+              <span className="py-1 px-3.5 rounded-full bg-black/50 text-white text-xs sm:text-sm font-bold tracking-wide backdrop-blur-md border border-white/20 shadow-md">
+                Established in 2026
+              </span>
+              <span className="py-1 px-3.5 rounded-full bg-white/20 text-white text-xs sm:text-sm font-semibold tracking-wide backdrop-blur-md border border-white/30 shadow-md">
+                Format: Online
+              </span>
+            </div>
+
             {heroConfig.badge && (
-              <div className="inline-block py-1.5 px-4 rounded-full bg-black/40 border border-white/30 backdrop-blur-md text-[10px] md:text-xs font-bold mb-4 md:mb-6 text-white uppercase tracking-widest shadow-lg">
+              <div className="inline-block py-1 px-4 rounded-full bg-black/40 border border-white/30 backdrop-blur-md text-[10px] md:text-xs font-bold mb-3 md:mb-4 text-white uppercase tracking-widest shadow-lg">
                 {heroConfig.badge}
               </div>
             )}
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold font-poppins leading-tight mb-4 text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold font-poppins leading-tight mb-3 text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">
               {heroConfig.title}
             </h1>
+
+            {/* Online Refereed & Peer Reviewed Statement */}
+            <div className="mb-4">
+              <span className="inline-block py-1.5 px-4 sm:px-6 rounded-full bg-primary/90 border border-white/30 text-white text-xs sm:text-sm md:text-base font-semibold tracking-wide shadow-lg backdrop-blur-md">
+                An online refereed Journal (peer reviewed Journal)
+              </span>
+            </div>
+
             <p className="text-sm md:text-lg lg:text-xl text-white mb-8 max-w-2xl drop-shadow-[0_3px_3px_rgba(0,0,0,0.9)] font-medium leading-relaxed">
               {heroConfig.subtitle}
             </p>

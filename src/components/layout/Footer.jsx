@@ -17,9 +17,10 @@ const Footer = () => {
             <p className="text-white/90 font-medium leading-relaxed text-sm">
               A publication by Srishti Social Research Foundation (SSRF)
             </p>
-            <p className="text-white/70 leading-relaxed text-sm mt-2">
-
-            </p>
+            <div className="space-y-1 text-xs text-white/75 mt-2 pt-2 border-t border-white/10">
+              <p><span className="text-accent font-semibold">e-ISSN</span> | Established in 2026 | Format: Online</p>
+              <p className="text-gray-400">An online refereed Journal (peer reviewed Journal)</p>
+            </div>
             <h3 className="text-lg font-semibold text-white mb-3">Follow Us</h3>
             <p className="text-xs text-gray-400 mb-4">
               Stay connected with our latest journal publications, announcements, research updates, and academic events through our official social media channels.
